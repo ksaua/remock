@@ -20,7 +20,11 @@ public class RemockBeanFactory extends DefaultListableBeanFactory {
     @Override
     public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition) {
         try {
-            Class<?> beanClazz = Class.forName(beanDefinition.getBeanClassName());
+            Class<?> beanClazz = null;
+            String beanClassName = beanDefinition.getBeanClassName();
+            if (beanClassName != null) {
+                beanClazz = Class.forName(beanClassName);
+            }
             if (isBeanRejected(beanName, beanClazz)) {
                 log.info("Rejected bean [{}] with definiton [{}]", beanName, beanDefinition);
             } else {

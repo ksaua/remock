@@ -1,4 +1,4 @@
-package no.saua.remock.application;
+package no.saua.remock.exampletests.application;
 
 /**
  * Created by knut on 23.02.15.

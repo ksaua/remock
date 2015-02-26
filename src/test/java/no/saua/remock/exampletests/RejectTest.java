@@ -1,7 +1,10 @@
-package no.saua.remock;
+package no.saua.remock.exampletests;
 
-import no.saua.remock.application.*;
+import no.saua.remock.Reject;
+import no.saua.remock.exampletests.application.*;
 import org.junit.Test;
+import org.junit.experimental.runners.Enclosed;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -12,6 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 
+@RunWith(Enclosed.class)
 public class RejectTest {
     /**
      * Reject one implementation
@@ -21,7 +25,7 @@ public class RejectTest {
     public static class RejectSingleImplementation extends CommonTest {;
 
         @Inject
-        public List<AnInterface> implementations;
+        private List<AnInterface> implementations;
 
         @Test
         public void test() {
@@ -38,7 +42,7 @@ public class RejectTest {
 
 
         @Autowired(required = false)
-        public List<AnInterface> implementations;
+        private List<AnInterface> implementations;
 
         @Test
         public void test() {
@@ -54,7 +58,7 @@ public class RejectTest {
     public static class RejectSuperClass extends CommonTest {
 
         @Autowired(required = false)
-        public List<SuperClass> instances;
+        private List<SuperClass> instances;
 
         @Test
         public void test() {
@@ -70,11 +74,27 @@ public class RejectTest {
     public static class RejectSubClass extends CommonTest {
 
         @Inject
-        public List<SuperClass> instances;
+        private List<SuperClass> instances;
 
         @Test
         public void test() {
             assertEquals(1, instances.size());
+        }
+    }
+
+    /**
+     * Reject bean name
+     */
+    @Reject(beanName = "someService")
+    @ContextConfiguration(classes = ConfigurationClass.class)
+    public static class RejectBeanName extends CommonTest {
+
+        @Autowired(required = false)
+        private SomeService someService;
+
+        @Test
+        public void test() {
+            assertNull("bean should not have been injected", someService);
         }
     }
 }

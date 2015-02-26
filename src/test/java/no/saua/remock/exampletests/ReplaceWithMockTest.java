@@ -1,7 +1,9 @@
-package no.saua.remock;
+package no.saua.remock.exampletests;
 
-import no.saua.remock.application.ConfigurationClass;
-import no.saua.remock.application.SomeService;
+import no.saua.remock.RemockBootstrapper;
+import no.saua.remock.ReplaceWithMock;
+import no.saua.remock.exampletests.application.ConfigurationClass;
+import no.saua.remock.exampletests.application.SomeService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.internal.util.MockUtil;

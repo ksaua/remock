@@ -6,7 +6,9 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConstructorArgumentValues;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 
-public class MockDefinition implements Rejecter {
+import java.util.Objects;
+
+public class MockDefinition extends EntityHelper<MockDefinition> implements Rejecter {
 
     private final Class<?> mockClass;
     private final String beanName;
@@ -32,6 +34,16 @@ public class MockDefinition implements Rejecter {
     @Override
     public boolean shouldReject(String beanName, Class<?> bean) {
         return beanName.equals(this.beanName) || bean.equals(mockClass);
+    }
+
+    @Override
+    public boolean equals(MockDefinition other) {
+        return Objects.equals(beanName, other.beanName) && Objects.equals(mockClass, other.mockClass);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(beanName, mockClass);
     }
 
     public static class MockFactoryBean implements FactoryBean {

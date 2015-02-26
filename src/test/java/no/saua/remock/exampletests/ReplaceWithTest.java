@@ -1,8 +1,10 @@
-package no.saua.remock;
+package no.saua.remock.exampletests;
 
-import no.saua.remock.application.AnInterface;
-import no.saua.remock.application.AnInterfaceImplOne;
-import no.saua.remock.application.AnInterfaceImplTwo;
+import no.saua.remock.RemockBootstrapper;
+import no.saua.remock.ReplaceWith;
+import no.saua.remock.exampletests.application.AnInterface;
+import no.saua.remock.exampletests.application.AnInterfaceImplOne;
+import no.saua.remock.exampletests.application.AnInterfaceImplTwo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;

@@ -1,4 +1,4 @@
-package no.saua.remock.application;
+package no.saua.remock.exampletests.application;
 
 import org.springframework.stereotype.Component;
 

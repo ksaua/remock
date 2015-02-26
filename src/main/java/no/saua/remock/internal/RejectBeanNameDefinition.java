@@ -1,9 +1,11 @@
 package no.saua.remock.internal;
 
+import java.util.Objects;
+
 /**
  * Created by knut on 24.02.15.
  */
-public class RejectBeanNameDefinition implements Rejecter {
+public class RejectBeanNameDefinition extends EntityHelper<RejectBeanNameDefinition> implements Rejecter {
     private final String beanName;
 
     public RejectBeanNameDefinition(String beanName) {
@@ -13,5 +15,15 @@ public class RejectBeanNameDefinition implements Rejecter {
     @Override
     public boolean shouldReject(String beanName, Class<?> beanClass) {
         return beanName.equals(this.beanName);
+    }
+
+    @Override
+    public boolean equals(RejectBeanNameDefinition other) {
+        return Objects.equals(beanName, other.beanName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(beanName);
     }
 }
