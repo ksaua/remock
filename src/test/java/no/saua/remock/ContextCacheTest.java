@@ -1,29 +1,31 @@
 package no.saua.remock;
 
-import no.saua.remock.exampletests.CommonTest;
+import no.saua.remock.ContextCacheTest.SomeTestClass;
+import no.saua.remock.ContextCacheTest.SomeTestClassEqual;
+import no.saua.remock.ContextCacheTest.SomeTestClassWithDifferentContext;
 import no.saua.remock.exampletests.application.SomeService;
 import no.saua.remock.exampletests.application.SomeServiceWithDependencies;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 import org.springframework.context.ApplicationContext;
-import org.springframework.test.context.BootstrapWith;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
 
 import static org.junit.Assert.*;
 
+/**
+ * Tests various forms of
+ */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ContextCacheTest.SomeTestClass.class, ContextCacheTest.SomeTestClassEqual.class, ContextCacheTest.SomeTestClassWithDifferentContext.class})
+@SuiteClasses({SomeTestClass.class, SomeTestClassEqual.class, SomeTestClassWithDifferentContext.class})
 public class ContextCacheTest {
 
     private static ApplicationContext cachedSpringContext;
 
     // :: The context of this test will be cached
-    @RunWith(SpringJUnit4ClassRunner.class)
-    @BootstrapWith(RemockBootstrapper.class)
     @ContextConfiguration(classes = SomeService.class)
     @Reject(SomeServiceWithDependencies.class)
     public static class SomeTestClass extends CommonTest {
@@ -52,9 +54,7 @@ public class ContextCacheTest {
         }
     }
 
-    // :: This test class rejects something, thus it should get a fresh spring context
-    @RunWith(SpringJUnit4ClassRunner.class)
-    @BootstrapWith(RemockBootstrapper.class)
+    // :: This test class does not rejects something, thus it should get a fresh spring context
     @ContextConfiguration(classes = SomeService.class)
     public static class SomeTestClassWithDifferentContext extends CommonTest {
 
@@ -67,6 +67,4 @@ public class ContextCacheTest {
             assertNotEquals("Should get different spring context", cachedSpringContext, springContext);
         }
     }
-
-
 }

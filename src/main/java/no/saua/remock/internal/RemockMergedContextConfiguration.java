@@ -34,7 +34,6 @@ public class RemockMergedContextConfiguration extends MergedContextConfiguration
 
     @Override
     public int hashCode() {
-        int superHash = super.hashCode();
-        return 31 * superHash + Objects.hash(rejecters, definers);
+        return 31 * super.hashCode() + Objects.hash(rejecters, definers);
     }
 }

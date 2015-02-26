@@ -8,10 +8,8 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Reject {
-    public static final Class<?> DEFAULT_CLASS = Object.class;
-
     public static final String DEFAULT_BEAN_NAME = "^$$DEFAULT$$^";
 
-    Class<?> value() default Object.class;
+    Class<?> value() default Reject.class;
     String beanName() default DEFAULT_BEAN_NAME;
 }

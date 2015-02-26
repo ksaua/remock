@@ -1,4 +1,4 @@
-package no.saua.remock.exampletests;
+package no.saua.remock;
 
 
 import no.saua.remock.RemockBootstrapper;

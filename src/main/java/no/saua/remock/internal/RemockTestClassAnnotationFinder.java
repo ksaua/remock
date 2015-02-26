@@ -20,7 +20,7 @@ public class RemockTestClassAnnotationFinder extends EntityHelper<RemockTestClas
     public RemockTestClassAnnotationFinder(Class<?> testClass) {
         Reject rejectAnnot = testClass.getAnnotation(Reject.class);
         if (rejectAnnot != null) {
-            if (!Reject.DEFAULT_CLASS.equals(rejectAnnot.value())) {
+            if (!Reject.class.equals(rejectAnnot.value())) {
                 rejecters.add(new RejectBeanClassDefinition(rejectAnnot.value()));
             } else if (!Reject.DEFAULT_BEAN_NAME.equals(rejectAnnot.beanName())) {
                 rejecters.add(new RejectBeanNameDefinition(rejectAnnot.beanName()));

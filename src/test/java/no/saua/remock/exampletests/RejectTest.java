@@ -1,5 +1,6 @@
 package no.saua.remock.exampletests;
 
+import no.saua.remock.CommonTest;
 import no.saua.remock.Reject;
 import no.saua.remock.exampletests.application.*;
 import org.junit.Test;
@@ -11,8 +12,10 @@ import org.springframework.test.context.ContextConfiguration;
 import javax.inject.Inject;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 
 
 @RunWith(Enclosed.class)
@@ -79,6 +82,7 @@ public class RejectTest {
         @Test
         public void test() {
             assertEquals(1, instances.size());
+            assertThat(instances.get(0), instanceOf(SuperClass.class));
         }
     }
 
