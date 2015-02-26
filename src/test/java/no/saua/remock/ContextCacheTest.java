@@ -1,8 +1,7 @@
 package no.saua.remock;
 
-import no.saua.remock.ContextCacheTest.SomeTestClass;
-import no.saua.remock.ContextCacheTest.SomeTestClassEqual;
-import no.saua.remock.ContextCacheTest.SomeTestClassWithDifferentContext;
+import no.saua.remock.ContextCacheTest.*;
+import no.saua.remock.exampletests.application.AnInterface;
 import no.saua.remock.exampletests.application.SomeService;
 import no.saua.remock.exampletests.application.SomeServiceWithDependencies;
 import org.junit.Test;
@@ -20,14 +19,19 @@ import static org.junit.Assert.*;
  * Tests various forms of
  */
 @RunWith(Suite.class)
-@SuiteClasses({SomeTestClass.class, SomeTestClassEqual.class, SomeTestClassWithDifferentContext.class})
+@SuiteClasses({SomeTestClass.class, SomeTestClassEqual.class, SomeTestClassNotEqual1.class,
+        SomeTestClassNotEqual2.class, SomeTestClassNotEqual3.class})
 public class ContextCacheTest {
 
-    private static ApplicationContext cachedSpringContext;
+    private static ApplicationContext cachedSpringContextWithRejectAndSpy;
+    private static ApplicationContext cachedSpringContextWithReject;
+    private static ApplicationContext cachedSpringContextWithSpy;
+
 
     // :: The context of this test will be cached
     @ContextConfiguration(classes = SomeService.class)
     @Reject(SomeServiceWithDependencies.class)
+    @ReplaceWithSpy(AnInterface.class)
     public static class SomeTestClass extends CommonTest {
 
         @Inject
@@ -36,13 +40,14 @@ public class ContextCacheTest {
         @Test
         public void test() {
             assertNotNull(springContext);
-            cachedSpringContext = springContext;
+            cachedSpringContextWithRejectAndSpy = springContext;
         }
     }
 
     // :: This test should use same spring context as previous test.
     @ContextConfiguration(classes = SomeService.class)
     @Reject(SomeServiceWithDependencies.class)
+    @ReplaceWithSpy(AnInterface.class)
     public static class SomeTestClassEqual extends CommonTest {
 
         @Inject
@@ -50,13 +55,15 @@ public class ContextCacheTest {
 
         @Test
         public void test() {
-            assertEquals("Should get the exact same spring context", cachedSpringContext, springContext);
+            assertNotNull(springContext);
+            assertEquals("Should get the exact same spring context", cachedSpringContextWithRejectAndSpy, springContext);
         }
     }
 
-    // :: This test class does not rejects something, thus it should get a fresh spring context
+    // :: This test should NOT use same spring context as first test.
     @ContextConfiguration(classes = SomeService.class)
-    public static class SomeTestClassWithDifferentContext extends CommonTest {
+    @Reject(SomeServiceWithDependencies.class)
+    public static class SomeTestClassNotEqual1 extends CommonTest {
 
         @Inject
         private ApplicationContext springContext;
@@ -64,7 +71,41 @@ public class ContextCacheTest {
         @Test
         public void test() {
             assertNotNull(springContext);
-            assertNotEquals("Should get different spring context", cachedSpringContext, springContext);
+            assertNotEquals("Should get different spring context", cachedSpringContextWithRejectAndSpy, springContext);
+            cachedSpringContextWithReject = springContext;
+        }
+    }
+
+    // :: This test should NOT use same spring context as first test.
+    @ContextConfiguration(classes = SomeService.class)
+    @ReplaceWithSpy(AnInterface.class)
+    public static class SomeTestClassNotEqual2 extends CommonTest {
+
+        @Inject
+        private ApplicationContext springContext;
+
+        @Test
+        public void test() {
+            assertNotNull(springContext);
+            assertNotEquals("Should get different spring context", cachedSpringContextWithRejectAndSpy, springContext);
+            assertNotEquals("Should get different spring context", cachedSpringContextWithReject, springContext);
+            cachedSpringContextWithSpy = springContext;
+        }
+    }
+
+    // :: This test class does not rejects something, thus it should get a fresh spring context
+    @ContextConfiguration(classes = SomeService.class)
+    public static class SomeTestClassNotEqual3 extends CommonTest {
+
+        @Inject
+        private ApplicationContext springContext;
+
+        @Test
+        public void test() {
+            assertNotNull(springContext);
+            assertNotEquals("Should get different spring context", cachedSpringContextWithRejectAndSpy, springContext);
+            assertNotEquals("Should get different spring context", cachedSpringContextWithReject, springContext);
+            assertNotEquals("Should get different spring context", cachedSpringContextWithSpy, springContext);
         }
     }
 }

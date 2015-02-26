@@ -1,5 +1,6 @@
 package no.saua.remock.internal;
 
+import no.saua.remock.internal.SpyDefinition.SpyInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.test.context.ContextConfigurationAttributes;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
@@ -12,6 +13,7 @@ public class RemockContextClassLoader extends AnnotationConfigContextLoader {
 
     private List<Rejecter> rejecters = new ArrayList<>();
     private List<MockDefinition> mockDefinitions = new ArrayList<>();
+    private List<SpyDefinition> spyDefinitions;
     private RemockBeanFactory beanFactory;
 
     @Override
@@ -30,8 +32,10 @@ public class RemockContextClassLoader extends AnnotationConfigContextLoader {
     protected void customizeContext(GenericApplicationContext context) {
         super.customizeContext(context);
         for (MockDefinition mockDefinition : mockDefinitions) {
-            beanFactory.registerMockBeanDefinition(mockDefinition.getBeanName(), mockDefinition.getFactoryBeanDefinition());
+            beanFactory.registerMockBeanDefinition(mockDefinition.getBeanName(), mockDefinition.getBeanDefinition());
         }
+
+        beanFactory.registerSingleton("$RemockSpyInitializer$", new SpyInitializer(spyDefinitions));
     }
 
     @Override
@@ -51,7 +55,8 @@ public class RemockContextClassLoader extends AnnotationConfigContextLoader {
         for (Class<?> clazz : classes) {
             RemockTestClassAnnotationFinder testClassHandler = new RemockTestClassAnnotationFinder(clazz);
             rejecters = testClassHandler.getRejecters();
-            mockDefinitions = testClassHandler.getDefiners();
+            mockDefinitions = testClassHandler.getMocks();
+            spyDefinitions = testClassHandler.getSpies();
         }
     }
 }

@@ -13,27 +13,29 @@ import java.util.Objects;
 public class RemockMergedContextConfiguration extends MergedContextConfiguration {
 
     private final List<Rejecter> rejecters;
-    private final List<MockDefinition> definers;
+    private final List<MockDefinition> mocks;
+    private final List<SpyDefinition> spies;
 
     public RemockMergedContextConfiguration(MergedContextConfiguration mergedConfig) {
         super(mergedConfig);
         RemockTestClassAnnotationFinder annotationFinder = new RemockTestClassAnnotationFinder(getTestClass());
         rejecters = annotationFinder.getRejecters();
-        definers = annotationFinder.getDefiners();
+        mocks = annotationFinder.getMocks();
+        spies = annotationFinder.getSpies();
     }
 
     @Override
     public boolean equals(Object other) {
         if (super.equals(other) && other instanceof RemockMergedContextConfiguration) {
             RemockMergedContextConfiguration otherObj = (RemockMergedContextConfiguration) other;
-            return super.equals(other) && Objects.equals(rejecters, otherObj.rejecters) && Objects.equals(definers,
-                    otherObj.definers);
+            return super.equals(other) && Objects.equals(rejecters, otherObj.rejecters) && Objects.equals(mocks,
+                    otherObj.mocks) && Objects.equals(spies, otherObj.spies);
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return 31 * super.hashCode() + Objects.hash(rejecters, definers);
+        return 31 * super.hashCode() + Objects.hash(rejecters, mocks, spies);
     }
 }

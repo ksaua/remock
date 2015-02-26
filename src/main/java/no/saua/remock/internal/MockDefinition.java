@@ -8,7 +8,7 @@ import org.springframework.beans.factory.support.GenericBeanDefinition;
 
 import java.util.Objects;
 
-public class MockDefinition extends EntityHelper<MockDefinition> implements Rejecter {
+public class MockDefinition extends EntityHelper<MockDefinition> implements Rejecter, SpringBeanDefiner {
 
     private final Class<?> mockClass;
     private final String beanName;
@@ -18,7 +18,8 @@ public class MockDefinition extends EntityHelper<MockDefinition> implements Reje
         this.mockClass = mockClass;
     }
 
-    public BeanDefinition getFactoryBeanDefinition() {
+    @Override
+    public BeanDefinition getBeanDefinition() {
         GenericBeanDefinition def = new GenericBeanDefinition();
         def.setBeanClass(MockFactoryBean.class);
         ConstructorArgumentValues constructorArgumentValues = new ConstructorArgumentValues();
@@ -27,6 +28,7 @@ public class MockDefinition extends EntityHelper<MockDefinition> implements Reje
         return def;
     }
 
+    @Override
     public String getBeanName() {
         return beanName;
     }
@@ -46,17 +48,20 @@ public class MockDefinition extends EntityHelper<MockDefinition> implements Reje
         return Objects.hash(beanName, mockClass);
     }
 
-    public static class MockFactoryBean implements FactoryBean {
+    public static class MockFactoryBean implements FactoryBean, Resettable {
+
+        private Object mock;
 
         private final Class<?> mockClass;
 
         public MockFactoryBean(Class<?> mockClass) {
             this.mockClass = mockClass;
+            this.mock = Mockito.mock(mockClass);
         }
 
         @Override
         public Object getObject() throws Exception {
-            return Mockito.mock(mockClass);
+            return mock;
         }
 
         @Override
@@ -67,6 +72,11 @@ public class MockDefinition extends EntityHelper<MockDefinition> implements Reje
         @Override
         public boolean isSingleton() {
             return true;
+        }
+
+        @Override
+        public void reset() {
+            Mockito.reset(mock);
         }
     }
 }
