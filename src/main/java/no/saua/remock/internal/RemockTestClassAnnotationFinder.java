@@ -1,7 +1,7 @@
 package no.saua.remock.internal;
 
 import no.saua.remock.Reject;
-import no.saua.remock.ReplaceWith;
+import no.saua.remock.ReplaceWithImpl;
 import no.saua.remock.ReplaceWithMock;
 import no.saua.remock.ReplaceWithSpy;
 
@@ -29,10 +29,10 @@ public class RemockTestClassAnnotationFinder extends EntityHelper<RemockTestClas
             }
         }
 
-        ReplaceWith replaceWithAnnot = testClass.getAnnotation(ReplaceWith.class);
-        if (replaceWithAnnot != null) {
-            Class<?> reject = replaceWithAnnot.value();
-            Class<?> with = replaceWithAnnot.with();
+        ReplaceWithImpl replaceWithImplAnnot = testClass.getAnnotation(ReplaceWithImpl.class);
+        if (replaceWithImplAnnot != null) {
+            Class<?> reject = replaceWithImplAnnot.value();
+            Class<?> with = replaceWithImplAnnot.with();
             if (reject == null || with == null) {
                 throw new IllegalArgumentException("Both the class to replace, and the class to replace with " +
                         "must be set for the ReplaceWith annotation to work.");

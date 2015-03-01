@@ -1,8 +1,6 @@
-package no.saua.remock.exampletests;
+package no.saua.remock;
 
-import no.saua.remock.CommonTest;
-import no.saua.remock.Reject;
-import no.saua.remock.exampletests.application.*;
+import no.saua.remock.exampleapplication.*;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;

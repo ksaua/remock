@@ -1,10 +1,8 @@
-package no.saua.remock.exampletests;
+package no.saua.remock;
 
-import no.saua.remock.RemockBootstrapper;
-import no.saua.remock.ReplaceWith;
-import no.saua.remock.exampletests.application.AnInterface;
-import no.saua.remock.exampletests.application.AnInterfaceImplOne;
-import no.saua.remock.exampletests.application.AnInterfaceImplTwo;
+import no.saua.remock.exampleapplication.AnInterface;
+import no.saua.remock.exampleapplication.AnInterfaceImplOne;
+import no.saua.remock.exampleapplication.AnInterfaceImplTwo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
@@ -20,9 +18,9 @@ import static org.junit.Assert.assertThat;
 @RunWith(SpringJUnit4ClassRunner.class)
 @BootstrapWith(RemockBootstrapper.class)
 @DirtiesContext
-@ReplaceWith(value = AnInterfaceImplOne.class, with = AnInterfaceImplTwo.class)
+@ReplaceWithImpl(value = AnInterfaceImplOne.class, with = AnInterfaceImplTwo.class)
 @ContextConfiguration(classes = { AnInterfaceImplOne.class })
-public class ReplaceWithTest {
+public class ReplaceWithImplTest {
 
     @Inject
     public AnInterface implementation;

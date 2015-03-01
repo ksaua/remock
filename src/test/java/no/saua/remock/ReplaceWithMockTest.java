@@ -1,9 +1,7 @@
-package no.saua.remock.exampletests;
+package no.saua.remock;
 
-import no.saua.remock.CommonTest;
-import no.saua.remock.ReplaceWithMock;
-import no.saua.remock.exampletests.application.ConfigurationClass;
-import no.saua.remock.exampletests.application.SomeService;
+import no.saua.remock.exampleapplication.ConfigurationClass;
+import no.saua.remock.exampleapplication.SomeService;
 import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
 

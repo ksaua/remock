@@ -1,10 +1,8 @@
-package no.saua.remock.exampletests;
+package no.saua.remock;
 
-import no.saua.remock.CommonTest;
-import no.saua.remock.ReplaceWithSpy;
-import no.saua.remock.exampletests.application.AnInterface;
-import no.saua.remock.exampletests.application.AnInterfaceImplOne;
-import no.saua.remock.exampletests.application.AnInterfaceImplTwo;
+import no.saua.remock.exampleapplication.AnInterface;
+import no.saua.remock.exampleapplication.AnInterfaceImplOne;
+import no.saua.remock.exampleapplication.AnInterfaceImplTwo;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;

@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ReplaceWith {
+public @interface ReplaceWithImpl {
     public Class<?> value();
     public Class<?> with();
 }

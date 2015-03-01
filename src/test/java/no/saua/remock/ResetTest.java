@@ -1,8 +1,8 @@
 package no.saua.remock;
 
-import no.saua.remock.exampletests.application.AnInterfaceImplOne;
-import no.saua.remock.exampletests.application.AnInterfaceImplTwo;
-import no.saua.remock.exampletests.application.SomeService;
+import no.saua.remock.exampleapplication.AnInterfaceImplOne;
+import no.saua.remock.exampleapplication.AnInterfaceImplTwo;
+import no.saua.remock.exampleapplication.SomeService;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;

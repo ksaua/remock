@@ -1,9 +1,9 @@
 package no.saua.remock;
 
 import no.saua.remock.ContextCacheTest.*;
-import no.saua.remock.exampletests.application.AnInterface;
-import no.saua.remock.exampletests.application.SomeService;
-import no.saua.remock.exampletests.application.SomeServiceWithDependencies;
+import no.saua.remock.exampleapplication.AnInterface;
+import no.saua.remock.exampleapplication.SomeService;
+import no.saua.remock.exampleapplication.SomeServiceWithDependencies;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

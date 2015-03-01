@@ -1,4 +1,4 @@
-package no.saua.remock.exampletests.application;
+package no.saua.remock.exampleapplication;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
