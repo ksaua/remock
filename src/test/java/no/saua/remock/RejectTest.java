@@ -11,9 +11,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 
 @RunWith(Enclosed.class)
@@ -23,7 +21,7 @@ public class RejectTest {
      */
     @Reject(AnInterfaceImplOne.class)
     @ContextConfiguration(classes = {AnInterfaceImplOne.class, AnInterfaceImplTwo.class})
-    public static class RejectSingleImplementation extends CommonTest {;
+    public static class RejectSingleImplementation extends CommonTest {
 
         @Inject
         private List<AnInterface> implementations;
@@ -31,6 +29,7 @@ public class RejectTest {
         @Test
         public void test() {
             assertEquals(1, implementations.size());
+            assertThat(implementations.get(0), instanceOf(AnInterfaceImplTwo.class));
         }
     }
 
@@ -81,6 +80,25 @@ public class RejectTest {
         public void test() {
             assertEquals(1, instances.size());
             assertThat(instances.get(0), instanceOf(SuperClass.class));
+        }
+    }
+
+    /**
+     * Reject multiple classes
+     */
+    @Reject({AnInterfaceImplTwo.class, SomeService.class})
+    @ContextConfiguration(classes = {AnInterfaceImplOne.class, AnInterfaceImplTwo.class, ConfigurationClass.class})
+    public static class RejectMultiple extends CommonTest {
+        @Inject
+        private AnInterface anInterface;
+
+        @Autowired(required = false)
+        private SomeService someService;
+
+        @Test
+        public void test() {
+            assertThat(anInterface, instanceOf(AnInterfaceImplOne.class));
+            assertNull(someService);
         }
     }
 

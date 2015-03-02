@@ -31,4 +31,38 @@ public class SpyTest {
             assertTrue(isSpy(two));
         }
     }
+
+    @ReplaceWithSpy({AnInterfaceImplOne.class, AnInterfaceImplTwo.class})
+    @ContextConfiguration(classes = {AnInterfaceImplOne.class, AnInterfaceImplTwo.class})
+    public static class SpyAllOfMultipleTypes extends CommonTest {
+
+        @Inject
+        AnInterfaceImplOne one;
+
+        @Inject
+        AnInterfaceImplTwo two;
+
+        @Test
+        public void test() {
+            assertTrue(isSpy(one));
+            assertTrue(isSpy(two));
+        }
+    }
+
+    @ReplaceWithSpy(beanNames = {"anInterfaceImplOne", "anInterfaceImplTwo"})
+    @ContextConfiguration(classes = {AnInterfaceImplOne.class, AnInterfaceImplTwo.class})
+    public static class SpyAllOfMultipleNamed extends CommonTest {
+
+        @Inject
+        AnInterfaceImplOne one;
+
+        @Inject
+        AnInterfaceImplTwo two;
+
+        @Test
+        public void test() {
+            assertTrue(isSpy(one));
+            assertTrue(isSpy(two));
+        }
+    }
 }

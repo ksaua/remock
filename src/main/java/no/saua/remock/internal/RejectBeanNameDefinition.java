@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * Created by knut on 24.02.15.
  */
-public class RejectBeanNameDefinition extends EntityHelper<RejectBeanNameDefinition> implements Rejecter {
+public class RejectBeanNameDefinition extends Entity<RejectBeanNameDefinition> implements Rejecter {
     private final String beanName;
 
     public RejectBeanNameDefinition(String beanName) {

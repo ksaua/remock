@@ -2,10 +2,11 @@ package no.saua.remock.internal;
 
 import java.util.Objects;
 
-public class RejectBeanClassDefinition extends EntityHelper<RejectBeanClassDefinition> implements Rejecter {
+public class RejectBeanClassDefinition extends Entity<RejectBeanClassDefinition> implements Rejecter {
     private final Class<?> rejectClass;
 
     public RejectBeanClassDefinition(Class<?> rejectClass) {
+        assert rejectClass != null;
         this.rejectClass = rejectClass;
     }
 

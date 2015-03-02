@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class SpyDefinition extends EntityHelper<SpyDefinition> {
+public class SpyDefinition extends Entity<SpyDefinition> {
 
     private String beanNameToSpy;
     private Class<?> classToSpy;

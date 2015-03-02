@@ -8,7 +8,7 @@ import org.springframework.beans.factory.support.GenericBeanDefinition;
 
 import java.util.Objects;
 
-public class MockDefinition extends EntityHelper<MockDefinition> implements Rejecter, SpringBeanDefiner {
+public class MockDefinition extends Entity<MockDefinition> implements Rejecter, SpringBeanDefiner {
 
     private final Class<?> mockClass;
     private final String beanName;

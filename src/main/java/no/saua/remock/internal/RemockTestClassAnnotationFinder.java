@@ -1,66 +1,51 @@
 package no.saua.remock.internal;
 
 import no.saua.remock.Reject;
+import no.saua.remock.Reject.RejectAnnotationVisitor;
 import no.saua.remock.ReplaceWithImpl;
+import no.saua.remock.ReplaceWithImpl.ReplaceWithImplAnnotationVisitor;
 import no.saua.remock.ReplaceWithMock;
+import no.saua.remock.ReplaceWithMock.ReplaceWithMockAnnotationVisitor;
 import no.saua.remock.ReplaceWithSpy;
+import no.saua.remock.ReplaceWithSpy.ReplaceWithSpyAnnotationVisitor;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+
 
 /**
  * Finds Remock annotations on the test class
  */
-public class RemockTestClassAnnotationFinder extends EntityHelper<RemockTestClassAnnotationFinder> {
+public class RemockTestClassAnnotationFinder extends Entity<RemockTestClassAnnotationFinder> {
 
-    private ArrayList<MockDefinition> mocks = new ArrayList<>();
-    private ArrayList<SpyDefinition> spies = new ArrayList<>();
-    private ArrayList<Rejecter> rejecters = new ArrayList<>();
+    private static Map<Class<? extends Annotation>, AnnotationVisitor> annotationReaders;
+
+    static {
+        annotationReaders = new HashMap<>();
+        annotationReaders.put(Reject.class, new RejectAnnotationVisitor());
+        annotationReaders.put(ReplaceWithImpl.class, new ReplaceWithImplAnnotationVisitor());
+        annotationReaders.put(ReplaceWithSpy.class, new ReplaceWithSpyAnnotationVisitor());
+        annotationReaders.put(ReplaceWithMock.class, new ReplaceWithMockAnnotationVisitor());
+    }
+
+    private List<MockDefinition> mocks = new ArrayList<>();
+    private List<SpyDefinition> spies = new ArrayList<>();
+    private List<Rejecter> rejecters = new ArrayList<>();
 
     public RemockTestClassAnnotationFinder(Class<?> testClass) {
-        Reject rejectAnnot = testClass.getAnnotation(Reject.class);
-        if (rejectAnnot != null) {
-            if (!Reject.class.equals(rejectAnnot.value())) {
-                rejecters.add(new RejectBeanClassDefinition(rejectAnnot.value()));
-            } else if (!Reject.DEFAULT_BEAN_NAME.equals(rejectAnnot.beanName())) {
-                rejecters.add(new RejectBeanNameDefinition(rejectAnnot.beanName()));
+        for (Map.Entry<Class<? extends Annotation>, AnnotationVisitor> entry : annotationReaders.entrySet()) {
+            if (testClass.getAnnotation(entry.getKey()) != null) {
+                entry.getValue().visitClass(testClass.getAnnotation(entry.getKey()), mocks, spies, rejecters);
             }
-        }
-
-        ReplaceWithImpl replaceWithImplAnnot = testClass.getAnnotation(ReplaceWithImpl.class);
-        if (replaceWithImplAnnot != null) {
-            Class<?> reject = replaceWithImplAnnot.value();
-            Class<?> with = replaceWithImplAnnot.with();
-            if (reject == null || with == null) {
-                throw new IllegalArgumentException("Both the class to replace, and the class to replace with " +
-                        "must be set for the ReplaceWith annotation to work.");
-            }
-            MockDefinition mockDefinition = new MockDefinition("meh", with);
-            mocks.add(mockDefinition);
-            rejecters.add(new RejectBeanClassDefinition(reject));
-        }
-
-        ReplaceWithSpy replaceWithSpyAnnot = testClass.getAnnotation(ReplaceWithSpy.class);
-        if (replaceWithSpyAnnot != null) {
-            spies.add(new SpyDefinition(replaceWithSpyAnnot.value(), replaceWithSpyAnnot.beanName()));
         }
 
         for (Field field : testClass.getDeclaredFields()) {
-            ReplaceWithMock annotation = field.getAnnotation(ReplaceWithMock.class);
-            if (annotation != null) {
-                MockDefinition mockDefinition = new MockDefinition(field.getName(), field.getType());
-                mocks.add(mockDefinition);
-                rejecters.add(mockDefinition);
-            }
-            Reject annot2 = field.getAnnotation(Reject.class);
-            if (annot2 != null) {
-                rejecters.add(new RejectBeanClassDefinition(field.getType()));
-            }
-            ReplaceWithSpy replaceWithSpyAnnot2 = field.getAnnotation(ReplaceWithSpy.class);
-            if (replaceWithSpyAnnot2 != null) {
-                spies.add(new SpyDefinition(field.getType(), field.getName()));
+            for (Map.Entry<Class<? extends Annotation>, AnnotationVisitor> entry : annotationReaders.entrySet()) {
+                Annotation annotation = field.getAnnotation(entry.getKey());
+                if (annotation != null) {
+                    entry.getValue().visitField(annotation, field, mocks, spies, rejecters);
+                }
             }
         }
     }

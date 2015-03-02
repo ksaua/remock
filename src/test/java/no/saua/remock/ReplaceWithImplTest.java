@@ -4,29 +4,46 @@ import no.saua.remock.exampleapplication.AnInterface;
 import no.saua.remock.exampleapplication.AnInterfaceImplOne;
 import no.saua.remock.exampleapplication.AnInterfaceImplTwo;
 import org.junit.Test;
+import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.BootstrapWith;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
 
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertThat;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@BootstrapWith(RemockBootstrapper.class)
-@DirtiesContext
-@ReplaceWithImpl(value = AnInterfaceImplOne.class, with = AnInterfaceImplTwo.class)
-@ContextConfiguration(classes = { AnInterfaceImplOne.class })
+
+@RunWith(Enclosed.class)
 public class ReplaceWithImplTest {
 
-    @Inject
-    public AnInterface implementation;
+    @ReplaceWithImpl(value = AnInterfaceImplOne.class, with = AnInterfaceImplTwo.class)
+    @ContextConfiguration(classes = { AnInterfaceImplOne.class })
+    public static class ReplaceWithImplAnnotatedOnClassTest extends CommonTest {
 
-    @Test
-    public void test() {
-        assertThat(implementation, instanceOf(AnInterfaceImplTwo.class));
+        @Inject
+        public AnInterface implementation;
+
+        @Inject
+        public AnInterfaceImplTwo implTwo;
+
+        @Test
+        public void test() {
+            assertThat(implementation, instanceOf(AnInterfaceImplTwo.class));
+            assertThat(implTwo, instanceOf(AnInterfaceImplTwo.class));
+        }
+    }
+
+    @ContextConfiguration(classes = { AnInterfaceImplOne.class })
+    public static class ReplaceWithImplAnnotatedOnFieldTest extends CommonTest {
+
+        @Inject
+        @ReplaceWithImpl(value = AnInterfaceImplOne.class, with=AnInterfaceImplTwo.class)
+        public AnInterface anInterface;
+
+        @Test
+        public void test() {
+            assertThat(anInterface, instanceOf(AnInterfaceImplTwo.class));
+        }
     }
 }
