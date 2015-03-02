@@ -1,6 +1,6 @@
 package no.saua.remock.internal;
 
-public abstract class EntityHelper<T extends EntityHelper> {
+public abstract class Entity<T extends Entity> {
     @Override
     public boolean equals(Object other) {
         if (getClass().equals(other.getClass())) {
