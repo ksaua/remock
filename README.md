@@ -30,8 +30,8 @@ test-class or field with `@Reject`, `@ReplaceWithImpl`, `@ReplaceWithMock` or `@
 
     @RunWith(SpringJUnit4ClassRunner.class)
     @BootstrapWith(RemockBootstrapper.class)
-    @ContextConfiguration(classes = ConfigurationClass.class)
-    public class ReplaceWithMockTest extends CommonTest {
+    @ContextConfiguration(classes = SomeService.class)
+    public class ReplaceWithMockTest {
 
         @ReplaceWithMock
         @Inject
