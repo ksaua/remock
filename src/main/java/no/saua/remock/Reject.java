@@ -12,7 +12,7 @@ import java.util.List;
  * set. Annotating on a field will cause Remock to automatically use the field's type.
  * <p>
  * A typical use-case is when you have optional dependencies either by @Autowired(required = false)
- * or through something like @Inject List<SomeInterface>.
+ * or through something like {@literal @Inject List<SomeInterface>}.
  * </p>
  * <p>
  * Examples:
@@ -51,8 +51,6 @@ import java.util.List;
  * public class MyTest {
  * }
  * </pre>
- * 
- * </p>
  */
 @Target({ElementType.FIELD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
