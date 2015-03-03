@@ -13,6 +13,8 @@ Remock allows you to easily:
 * Replace any spring bean with a different implementation.
 * Rejecting any spring bean from being created without replacing it.
 
+Note: Remock currently only works with Spring 4.1. Support for Spring 4.0 and 3.2 is planned.
+
 # Getting it
 
 If you're a gradle user, add the following to your build.gradle file
@@ -24,7 +26,30 @@ If you're a gradle user, add the following to your build.gradle file
 tl;dr: Annotate your Spring test-classes with `@BootstrapWith(RemockBootstrapper.class)`. Then you can annotate the
 test-class or field with `@Reject`, `@ReplaceWithImpl`, `@ReplaceWithMock` or `@WrapWithSpy`.
 
-For detailed examples see the test case.
+## Mocking out a dependency:
+
+    @RunWith(SpringJUnit4ClassRunner.class)
+    @BootstrapWith(RemockBootstrapper.class)
+    @ContextConfiguration(classes = ConfigurationClass.class)
+    public class ReplaceWithMockTest extends CommonTest {
+
+        @ReplaceWithMock
+        @Inject
+        public SomeDependency someDependency;
+
+        @Inject
+        public SomeService someService;
+
+        @Test
+        public void test() {
+            when(someDependency.method()).thenReturn(42);
+            assertEquals(21, someService.getHalf());
+            assertTrue(isMock(someService));
+        }
+    }
+
+
+For more detailed examples see the test cases.
 
 # Difference between Springockito and Remock
 
