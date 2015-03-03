@@ -1,8 +1,11 @@
 apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'signing'
 
+group = 'no.saua.remock'
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
-version = '1.0-SNAPSHOT'
+version = '0.2.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -15,7 +18,7 @@ ext {
 dependencies {
     compile 'org.slf4j:slf4j-api:1.7.7'
     compile 'javax.inject:javax.inject:1'
-    compile 'org.mockito:mockito-all:1.10.19'
+    compile 'org.mockito:mockito-core:1.10.19'
     compile 'org.springframework:spring-test:' + springVersion
     compile 'org.springframework:spring-context:' + springVersion
 
@@ -26,4 +29,66 @@ dependencies {
     testCompile 'org.apache.logging.log4j:log4j-core:2.1'
     testCompile 'org.apache.logging.log4j:log4j-slf4j-impl:2.1'
     testCompile 'org.slf4j:jcl-over-slf4j:1.7.10'
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+
+            pom.project {
+                name 'Remock'
+                packaging 'jar'
+                description 'Remock is a library for mocking up Spring beans with Mockito'
+                url 'http://github.com/ksaua/remock'
+
+                scm {
+                    url 'scm:git@github.com:ksaua/remock.git'
+                    connection 'scm:git@github.com:ksaua/remock.git'
+                    developerConnection 'scm:git@github.com:ksaua/remock.git'
+                }
+
+                licenses {
+                    license {
+                        name 'The MIT License'
+                        url 'http://opensource.org/licenses/MIT'
+                        distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'ksaua'
+                        name 'Knut Saua Mathiesen'
+                    }
+                }
+            }
+        }
+    }
 }

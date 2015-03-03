@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/ksaua/remock.svg?branch=master)](https://travis-ci.org/ksaua/remock)
 
-Remock is a small library which helps you when integration tests a spring applications.
+Remock is a small library which helps integration testing spring applications.
 It is heavily inspired by [springockito-annotations](https://bitbucket.org/kubek2k/springockito/wiki/Home) which
 unfortunately appears not be maintained anymore.
 
@@ -21,10 +21,10 @@ If you're a gradle user, add the following to your build.gradle file
 
 # Using it
 
-tl;dr: Annotate your spring test-classes with `@BootstrapWith(RemockBootstrapper.class)`. Then you can annotate the
+tl;dr: Annotate your Spring test-classes with `@BootstrapWith(RemockBootstrapper.class)`. Then you can annotate the
 test-class or field with `@Reject`, `@ReplaceWithImpl`, `@ReplaceWithMock` or `@WrapWithSpy`.
 
-For detailed examples the test case
+For detailed examples see the test case.
 
 # Difference between Springockito and Remock
 
@@ -32,5 +32,5 @@ The big difference between Springockito and Remock is whether or not the origina
 bean factory. While Springockito will use @Primary on all mocked/spied beans, thus taking precedence over the originals,
 they will still be injected if you @Inject List<SomeInterface>.
 
-Remock takes a different approach. It takes control over springs bean factory and downright rejects adding the
+Remock takes a different approach. It takes control over Spring's bean factory and downright rejects adding the
 bean definition of mocked/spied beans.
