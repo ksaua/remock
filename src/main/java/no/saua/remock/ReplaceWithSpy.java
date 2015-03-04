@@ -5,12 +5,9 @@ import no.saua.remock.internal.MockDefinition;
 import no.saua.remock.internal.Rejecter;
 import no.saua.remock.internal.SpyDefinition;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 import java.lang.reflect.Field;
-import java.util.List;
+import java.util.Set;
 
 @Target({ElementType.TYPE, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
@@ -22,8 +19,8 @@ public @interface ReplaceWithSpy {
     public static class ReplaceWithSpyAnnotationVisitor implements AnnotationVisitor<ReplaceWithSpy> {
 
         @Override
-        public void visitClass(ReplaceWithSpy annotation, List<MockDefinition> mocks, List<SpyDefinition> spies,
-                        List<Rejecter> rejecters) {
+        public void visitClass(ReplaceWithSpy annotation, Set<MockDefinition> mocks, Set<SpyDefinition> spies,
+                        Set<Rejecter> rejecters) {
             if (annotation.value().length > 0) {
                 for (Class<?> spyClass : annotation.value()) {
                     spies.add(new SpyDefinition(spyClass, null));
@@ -39,8 +36,8 @@ public @interface ReplaceWithSpy {
         }
 
         @Override
-        public void visitField(ReplaceWithSpy annotation, Field field, List<MockDefinition> mocks,
-                        List<SpyDefinition> spies, List<Rejecter> rejecters) {
+        public void visitField(ReplaceWithSpy annotation, Field field, Set<MockDefinition> mocks,
+                        Set<SpyDefinition> spies, Set<Rejecter> rejecters) {
             spies.add(new SpyDefinition(field.getType(), field.getName()));
         }
     }

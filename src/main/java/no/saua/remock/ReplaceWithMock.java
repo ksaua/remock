@@ -10,7 +10,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
-import java.util.List;
+import java.util.Set;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
@@ -19,12 +19,14 @@ public @interface ReplaceWithMock {
     public static class ReplaceWithMockAnnotationVisitor implements AnnotationVisitor<ReplaceWithMock> {
 
         @Override
-        public void visitClass(ReplaceWithMock annotation, List<MockDefinition> mocks, List<SpyDefinition> spies, List<Rejecter> rejecters) {
+        public void visitClass(ReplaceWithMock annotation, Set<MockDefinition> mocks, Set<SpyDefinition> spies,
+                        Set<Rejecter> rejecters) {
 
         }
 
         @Override
-        public void visitField(ReplaceWithMock annotation, Field field, List<MockDefinition> mocks, List<SpyDefinition> spies, List<Rejecter> rejecters) {
+        public void visitField(ReplaceWithMock annotation, Field field, Set<MockDefinition> mocks,
+                        Set<SpyDefinition> spies, Set<Rejecter> rejecters) {
             MockDefinition mockDefinition = new MockDefinition(field.getName(), field.getType());
             mocks.add(mockDefinition);
             rejecters.add(mockDefinition);

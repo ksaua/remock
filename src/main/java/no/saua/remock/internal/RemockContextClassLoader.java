@@ -6,14 +6,13 @@ import org.springframework.test.context.ContextConfigurationAttributes;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 public class RemockContextClassLoader extends AnnotationConfigContextLoader {
 
-    private List<Rejecter> rejecters = new ArrayList<>();
-    private List<MockDefinition> mockDefinitions = new ArrayList<>();
-    private List<SpyDefinition> spyDefinitions;
+    private Set<Rejecter> rejecters;
+    private Set<MockDefinition> mockDefinitions;
+    private Set<SpyDefinition> spyDefinitions;
     private RemockBeanFactory beanFactory;
 
     @Override

@@ -2,12 +2,9 @@ package no.saua.remock;
 
 import no.saua.remock.internal.*;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 import java.lang.reflect.Field;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Replaces
@@ -27,8 +24,8 @@ public @interface ReplaceWithImpl {
     public static class ReplaceWithImplAnnotationVisitor implements AnnotationVisitor<ReplaceWithImpl> {
 
         @Override
-        public void visitClass(ReplaceWithImpl annotation, List<MockDefinition> mocks, List<SpyDefinition> spies,
-                        List<Rejecter> rejecters) {
+        public void visitClass(ReplaceWithImpl annotation, Set<MockDefinition> mocks, Set<SpyDefinition> spies,
+                        Set<Rejecter> rejecters) {
             Class<?> reject = annotation.value();
             Class<?> with = annotation.with();
             if (reject == null || with == null) {
@@ -41,8 +38,8 @@ public @interface ReplaceWithImpl {
         }
 
         @Override
-        public void visitField(ReplaceWithImpl annotation, Field field, List<MockDefinition> mocks,
-                        List<SpyDefinition> spies, List<Rejecter> rejecters) {
+        public void visitField(ReplaceWithImpl annotation, Field field, Set<MockDefinition> mocks,
+                        Set<SpyDefinition> spies, Set<Rejecter> rejecters) {
             Class<?> reject = annotation.value();
             if (reject == null) {
                 throw new IllegalArgumentException("Both the class to replace, and the class to replace with "

@@ -8,15 +8,15 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.core.type.MethodMetadata;
 import org.springframework.core.type.StandardMethodMetadata;
 
-import java.util.List;
+import java.util.Set;
 
 public class RemockBeanFactory extends DefaultListableBeanFactory {
 
     private final static Logger log = LoggerFactory.getLogger(RemockBeanFactory.class);
 
-    private List<Rejecter> rejecters;
+    private Set<Rejecter> rejecters;
 
-    public RemockBeanFactory(List<Rejecter> rejecters) {
+    public RemockBeanFactory(Set<Rejecter> rejecters) {
         this.rejecters = rejecters;
     }
 

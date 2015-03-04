@@ -2,8 +2,8 @@ package no.saua.remock.internal;
 
 import org.springframework.test.context.MergedContextConfiguration;
 
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * To get Springs context caching mechanism working we extend the MergedContextConfiguration and modifying the
@@ -12,9 +12,9 @@ import java.util.Objects;
  */
 public class RemockMergedContextConfiguration extends MergedContextConfiguration {
 
-    private final List<Rejecter> rejecters;
-    private final List<MockDefinition> mocks;
-    private final List<SpyDefinition> spies;
+    private final Set<Rejecter> rejecters;
+    private final Set<MockDefinition> mocks;
+    private final Set<SpyDefinition> spies;
 
     public RemockMergedContextConfiguration(MergedContextConfiguration mergedConfig) {
         super(mergedConfig);

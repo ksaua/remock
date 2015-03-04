@@ -4,9 +4,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class SpyDefinition extends Entity<SpyDefinition> {
 
@@ -34,10 +32,10 @@ public class SpyDefinition extends Entity<SpyDefinition> {
 
     public static class SpyInitializer implements BeanPostProcessor, Resettable {
 
-        private List<SpyDefinition> spyDefinitions = new ArrayList<>();
+        private Set<SpyDefinition> spyDefinitions = new HashSet<>();
         private List<Object> spies = new ArrayList<>();
 
-        public SpyInitializer(List<SpyDefinition> spyDefinitions) {
+        public SpyInitializer(Set<SpyDefinition> spyDefinitions) {
             this.spyDefinitions = spyDefinitions;
         }
 

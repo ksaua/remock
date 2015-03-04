@@ -2,9 +2,12 @@ package no.saua.remock;
 
 import no.saua.remock.internal.*;
 
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Field;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Reject beans, causing them not to be created spring. Can either be annotated a test-class or on a
@@ -63,8 +66,8 @@ public @interface Reject {
 
     public static class RejectAnnotationVisitor implements AnnotationVisitor<Reject> {
         @Override
-        public void visitClass(Reject annotation, List<MockDefinition> mocks, List<SpyDefinition> spies,
-                        List<Rejecter> rejecters) {
+        public void visitClass(Reject annotation, Set<MockDefinition> mocks, Set<SpyDefinition> spies,
+                        Set<Rejecter> rejecters) {
             Class<?>[] rejectClasses = annotation.value();
             if (rejectClasses.length > 0) {
                 for (Class<?> rejectClass : rejectClasses) {
@@ -76,9 +79,9 @@ public @interface Reject {
         }
 
         @Override
-        public void visitField(Reject annot, Field field, List<MockDefinition> mocks,
-                        List<SpyDefinition> spies, List<Rejecter> rejecters) {
-          rejecters.add(new RejectBeanClassDefinition(field.getType()));
+        public void visitField(Reject annot, Field field, Set<MockDefinition> mocks, Set<SpyDefinition> spies,
+                        Set<Rejecter> rejecters) {
+            rejecters.add(new RejectBeanClassDefinition(field.getType()));
         }
     }
 

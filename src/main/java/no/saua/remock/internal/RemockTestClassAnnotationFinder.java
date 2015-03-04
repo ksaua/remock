@@ -29,36 +29,46 @@ public class RemockTestClassAnnotationFinder extends Entity<RemockTestClassAnnot
         annotationReaders.put(ReplaceWithMock.class, new ReplaceWithMockAnnotationVisitor());
     }
 
-    private List<MockDefinition> mocks = new ArrayList<>();
-    private List<SpyDefinition> spies = new ArrayList<>();
-    private List<Rejecter> rejecters = new ArrayList<>();
+    private Set<MockDefinition> mocks = new HashSet<>();
+    private Set<SpyDefinition> spies = new HashSet<>();
+    private Set<Rejecter> rejecters = new HashSet<>();
 
     public RemockTestClassAnnotationFinder(Class<?> testClass) {
-        for (Map.Entry<Class<? extends Annotation>, AnnotationVisitor> entry : annotationReaders.entrySet()) {
-            if (testClass.getAnnotation(entry.getKey()) != null) {
-                entry.getValue().visitClass(testClass.getAnnotation(entry.getKey()), mocks, spies, rejecters);
-            }
-        }
+        // :: Find super classes
+        List<Class<?>> classesToTest = new LinkedList<>();
+        Class<?> currentClass = testClass;
+        do {
+            classesToTest.add(currentClass);
+            currentClass = currentClass.getSuperclass();
+        } while (currentClass != null);
 
-        for (Field field : testClass.getDeclaredFields()) {
+        for (Class<?> clazz: classesToTest) {
             for (Map.Entry<Class<? extends Annotation>, AnnotationVisitor> entry : annotationReaders.entrySet()) {
-                Annotation annotation = field.getAnnotation(entry.getKey());
-                if (annotation != null) {
-                    entry.getValue().visitField(annotation, field, mocks, spies, rejecters);
+                if (clazz.getAnnotation(entry.getKey()) != null) {
+                    entry.getValue().visitClass(clazz.getAnnotation(entry.getKey()), mocks, spies, rejecters);
+                }
+            }
+
+            for (Field field : clazz.getDeclaredFields()) {
+                for (Map.Entry<Class<? extends Annotation>, AnnotationVisitor> entry : annotationReaders.entrySet()) {
+                    Annotation annotation = field.getAnnotation(entry.getKey());
+                    if (annotation != null) {
+                        entry.getValue().visitField(annotation, field, mocks, spies, rejecters);
+                    }
                 }
             }
         }
     }
 
-    public List<Rejecter> getRejecters() {
+    public Set<Rejecter> getRejecters() {
         return rejecters;
     }
 
-    public List<MockDefinition> getMocks() {
+    public Set<MockDefinition> getMocks() {
         return mocks;
     }
 
-    public List<SpyDefinition> getSpies() {
+    public Set<SpyDefinition> getSpies() {
         return spies;
     }
 
