@@ -1,9 +1,6 @@
 package no.saua.remock;
 
-import no.saua.remock.internal.AnnotationVisitor;
-import no.saua.remock.internal.MockDefinition;
-import no.saua.remock.internal.Rejecter;
-import no.saua.remock.internal.SpyDefinition;
+import no.saua.remock.internal.*;
 
 import java.lang.annotation.*;
 import java.lang.reflect.Field;
@@ -19,7 +16,7 @@ public @interface ReplaceWithSpy {
     public static class ReplaceWithSpyAnnotationVisitor implements AnnotationVisitor<ReplaceWithSpy> {
 
         @Override
-        public void visitClass(ReplaceWithSpy annotation, Set<MockDefinition> mocks, Set<SpyDefinition> spies,
+        public void visitClass(ReplaceWithSpy annotation, Set<SpringBeanDefiner> mocks, Set<SpyDefinition> spies,
                         Set<Rejecter> rejecters) {
             if (annotation.value().length > 0) {
                 for (Class<?> spyClass : annotation.value()) {
@@ -36,7 +33,7 @@ public @interface ReplaceWithSpy {
         }
 
         @Override
-        public void visitField(ReplaceWithSpy annotation, Field field, Set<MockDefinition> mocks,
+        public void visitField(ReplaceWithSpy annotation, Field field, Set<SpringBeanDefiner> mocks,
                         Set<SpyDefinition> spies, Set<Rejecter> rejecters) {
             spies.add(new SpyDefinition(field.getType(), field.getName()));
         }

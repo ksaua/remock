@@ -11,7 +11,7 @@ import java.util.Set;
 public class RemockContextClassLoader extends AnnotationConfigContextLoader {
 
     private Set<Rejecter> rejecters;
-    private Set<MockDefinition> mockDefinitions;
+    private Set<SpringBeanDefiner> definers;
     private Set<SpyDefinition> spyDefinitions;
     private RemockBeanFactory beanFactory;
 
@@ -30,7 +30,7 @@ public class RemockContextClassLoader extends AnnotationConfigContextLoader {
     @Override
     protected void customizeContext(GenericApplicationContext context) {
         super.customizeContext(context);
-        for (MockDefinition mockDefinition : mockDefinitions) {
+        for (SpringBeanDefiner mockDefinition : definers) {
             beanFactory.registerMockBeanDefinition(mockDefinition.getBeanName(), mockDefinition.getBeanDefinition());
         }
 
@@ -54,7 +54,7 @@ public class RemockContextClassLoader extends AnnotationConfigContextLoader {
         for (Class<?> clazz : classes) {
             RemockTestClassAnnotationFinder testClassHandler = new RemockTestClassAnnotationFinder(clazz);
             rejecters = testClassHandler.getRejecters();
-            mockDefinitions = testClassHandler.getMocks();
+            definers = testClassHandler.getDefiners();
             spyDefinitions = testClassHandler.getSpies();
         }
     }

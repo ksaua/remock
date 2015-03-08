@@ -10,11 +10,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @BootstrapWith(RemockBootstrapper.class)
 public abstract class CommonTest {
 
-    public boolean isMock(Object object) {
+    public static boolean isMock(Object object) {
         return new MockUtil().isMock(object);
     }
 
-    public boolean isSpy(Object object) {
+    public static boolean isSpy(Object object) {
         return new MockUtil().isSpy(object);
     }
 }

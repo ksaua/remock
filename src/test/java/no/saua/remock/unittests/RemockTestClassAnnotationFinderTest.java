@@ -2,6 +2,7 @@ package no.saua.remock.unittests;
 
 import no.saua.remock.Reject;
 import no.saua.remock.ReplaceWithMock;
+import no.saua.remock.exampleapplication.AnInterface;
 import no.saua.remock.exampleapplication.SomeService;
 import no.saua.remock.internal.RemockTestClassAnnotationFinder;
 import org.junit.Test;
@@ -10,6 +11,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 public class RemockTestClassAnnotationFinderTest {
+
+    @Reject(SomeService.class)
+    public static class SomeTestClass {
+        @ReplaceWithMock
+        public AnInterface test;
+    }
+
     @Test
     public void test() {
         RemockTestClassAnnotationFinder testClassHandler = new RemockTestClassAnnotationFinder(SomeTestClass.class);
@@ -17,15 +25,9 @@ public class RemockTestClassAnnotationFinderTest {
     }
 
     @Reject(SomeService.class)
-    public static class SomeTestClass {
-        @ReplaceWithMock
-        public SomeService test;
-    }
-
-    @Reject(SomeService.class)
     public static class SomeEqualTestClass {
         @ReplaceWithMock
-        public SomeService test;
+        public AnInterface test;
     }
 
     @Reject(SomeService.class)
@@ -34,12 +36,12 @@ public class RemockTestClassAnnotationFinderTest {
 
     public static class SomeTestClassNotEqual2 {
         @ReplaceWithMock
-        public SomeService test;
+        public AnInterface test;
     }
 
     public static class SomeSubTestClass extends SomeTestClassNotEqual {
         @ReplaceWithMock
-        public SomeService test;
+        public AnInterface test;
     }
 
     @Test

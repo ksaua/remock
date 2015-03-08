@@ -66,7 +66,7 @@ public @interface Reject {
 
     public static class RejectAnnotationVisitor implements AnnotationVisitor<Reject> {
         @Override
-        public void visitClass(Reject annotation, Set<MockDefinition> mocks, Set<SpyDefinition> spies,
+        public void visitClass(Reject annotation, Set<SpringBeanDefiner> mocks, Set<SpyDefinition> spies,
                         Set<Rejecter> rejecters) {
             Class<?>[] rejectClasses = annotation.value();
             if (rejectClasses.length > 0) {
@@ -79,7 +79,7 @@ public @interface Reject {
         }
 
         @Override
-        public void visitField(Reject annot, Field field, Set<MockDefinition> mocks, Set<SpyDefinition> spies,
+        public void visitField(Reject annot, Field field, Set<SpringBeanDefiner> mocks, Set<SpyDefinition> spies,
                         Set<Rejecter> rejecters) {
             rejecters.add(new RejectBeanClassDefinition(field.getType()));
         }

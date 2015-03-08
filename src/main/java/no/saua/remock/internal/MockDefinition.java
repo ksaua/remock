@@ -8,7 +8,7 @@ import org.springframework.beans.factory.support.GenericBeanDefinition;
 
 import java.util.Objects;
 
-public class MockDefinition extends Entity<MockDefinition> implements Rejecter, SpringBeanDefiner {
+public class MockDefinition extends Entity<MockDefinition> implements SpringBeanDefiner {
 
     private final Class<?> mockClass;
     private final String beanName;
@@ -31,11 +31,6 @@ public class MockDefinition extends Entity<MockDefinition> implements Rejecter, 
     @Override
     public String getBeanName() {
         return beanName;
-    }
-
-    @Override
-    public boolean shouldReject(String beanName, Class<?> bean) {
-        return beanName.equals(this.beanName) || bean.equals(mockClass);
     }
 
     @Override

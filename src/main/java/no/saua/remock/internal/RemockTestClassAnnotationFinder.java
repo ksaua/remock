@@ -29,23 +29,23 @@ public class RemockTestClassAnnotationFinder extends Entity<RemockTestClassAnnot
         annotationReaders.put(ReplaceWithMock.class, new ReplaceWithMockAnnotationVisitor());
     }
 
-    private Set<MockDefinition> mocks = new HashSet<>();
+    private Set<SpringBeanDefiner> definers = new HashSet<>();
     private Set<SpyDefinition> spies = new HashSet<>();
     private Set<Rejecter> rejecters = new HashSet<>();
 
     public RemockTestClassAnnotationFinder(Class<?> testClass) {
         // :: Find super classes
-        List<Class<?>> classesToTest = new LinkedList<>();
+        List<Class<?>> classHierarchy = new LinkedList<>();
         Class<?> currentClass = testClass;
         do {
-            classesToTest.add(currentClass);
+            classHierarchy.add(currentClass);
             currentClass = currentClass.getSuperclass();
         } while (currentClass != null);
 
-        for (Class<?> clazz: classesToTest) {
+        for (Class<?> clazz: classHierarchy) {
             for (Map.Entry<Class<? extends Annotation>, AnnotationVisitor> entry : annotationReaders.entrySet()) {
                 if (clazz.getAnnotation(entry.getKey()) != null) {
-                    entry.getValue().visitClass(clazz.getAnnotation(entry.getKey()), mocks, spies, rejecters);
+                    entry.getValue().visitClass(clazz.getAnnotation(entry.getKey()), definers, spies, rejecters);
                 }
             }
 
@@ -53,7 +53,7 @@ public class RemockTestClassAnnotationFinder extends Entity<RemockTestClassAnnot
                 for (Map.Entry<Class<? extends Annotation>, AnnotationVisitor> entry : annotationReaders.entrySet()) {
                     Annotation annotation = field.getAnnotation(entry.getKey());
                     if (annotation != null) {
-                        entry.getValue().visitField(annotation, field, mocks, spies, rejecters);
+                        entry.getValue().visitField(annotation, field, definers, spies, rejecters);
                     }
                 }
             }
@@ -64,8 +64,8 @@ public class RemockTestClassAnnotationFinder extends Entity<RemockTestClassAnnot
         return rejecters;
     }
 
-    public Set<MockDefinition> getMocks() {
-        return mocks;
+    public Set<SpringBeanDefiner> getDefiners() {
+        return definers;
     }
 
     public Set<SpyDefinition> getSpies() {
