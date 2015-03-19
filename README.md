@@ -28,6 +28,8 @@ test-class or field with `@Reject`, `@ReplaceWithImpl`, `@ReplaceWithMock` or `@
 
 ## Mocking out a dependency:
 
+The following code will replace `SomeDependency` with a Mockito mock.
+
     @RunWith(SpringJUnit4ClassRunner.class)
     @BootstrapWith(RemockBootstrapper.class)
     @ContextConfiguration(classes = SomeService.class)
@@ -48,14 +50,128 @@ test-class or field with `@Reject`, `@ReplaceWithImpl`, `@ReplaceWithMock` or `@
         }
     }
 
+## Spying on a dependency:
+
+The following code will wrap the original `SomeDependency` instance with a Mockito spy.
+
+    @RunWith(SpringJUnit4ClassRunner.class)
+    @BootstrapWith(RemockBootstrapper.class)
+    @ContextConfiguration(classes = SomeService.class)
+    public class ReplaceWithMockTest {
+
+        @WrapWithSpy
+        @Inject
+        public SomeDependency someDependency;
+
+        @Inject
+        public SomeService someService;
+
+        @Test
+        public void test() {
+            someService.getHalf()
+            verify(someDependency).method();
+        }
+    }
+
+# Replacing a bean with a non-mockito mock
+
+The following code will replace `ServiceImpl` with `ServiceMock`
+
+    @ContextConfiguration(classes = {ServiceImpl.class})
+    public static class ReplaceWithImplAnnotatedOnFieldTest extends CommonTest {
+
+        @Inject
+        @ReplaceWithImpl(value = ServiceImpl.class, with = ServiceMock.class)
+        public Service service;
+
+        @Test
+        public void test() {
+            assertEquals(ServiceMock.class, service.getClass());
+        }
+    }
+
+## Rejecting a dependency:
+
+The following code will reject any bean definitions of the type `SomeDangerousService` from being defined in
+Spring's bean factory.
+
+    @RunWith(SpringJUnit4ClassRunner.class)
+    @BootstrapWith(RemockBootstrapper.class)
+    @Reject(SomeDangerousService.class)
+    @ContextConfiguration(classes = SomeService.class)
+    public class ReplaceWithMockTest {
+
+        @Test
+        public void test() {
+            /* SomeDangerousService does not exist */
+        }
+    }
+
+This is a bit out of the ordinary, but it's quite powerful. This is useful when you inject List or Maps of an interface
+or a superclass and want to remove some beans from the bean factory.
+
+Another use-case is for controlling which beans are defined and lifecycled when a @ComponentScan is used.
+
+## Grouping common mocks
+
+Often tests require the same mocks. Remock allows you to easily group mocks, either by specifying the remock-annotations
+on a superclass, or by using the @RemockContextConfiguration.
+
+    @RunWith(SpringJUnit4ClassRunner.class)
+    @BootstrapWith(RemockBootstrapper.class)
+    @ContextConfiguration(classes = {SomeServiceWithDependencies.class, SomeDependency.class})
+    @RemockContextConfiguration(MyRemockConfig.class)
+    public class RemockContextConfigurationTest {
+
+        @Inject
+        private SomeServiceWithDependencies someServiceWithDependencies;
+
+        @Test
+        public void test() {
+            isMock(someServiceWithDependencies.getDependency());
+        }
+
+        @ReplaceWithMock(SomeDependency.class)
+        @Reject(SomeOtherDependency.class)
+        public static class MyRemockConfig {
+        }
+    }
 
 For more detailed examples see the test cases.
+
+## Lazily intializing beans
+
+Annotating your test with `@LazilyInitializeTest` causes Remock to force all beans to be lazily initialized. For large
+applications this can be useful for increasing test performance, allowing you to only instantiate the beans necessary
+for the test.
+
+    @RunWith(SpringJUnit4ClassRunner.class)
+    @BootstrapWith(RemockBootstrapper.class)
+    @ContextConfiguration(classes = {SomeService.class, SomeOtherService.class})
+    @LazilyInitializeTest
+    public class RemockContextConfigurationTest {
+
+        @Inject
+        private SomeService someService;
+
+        @Test
+        public void test() {
+            isMock(someServiceWithDependencies.getDependency());
+        }
+    }
+
+
+
+!!NOTE!! You should never depend on this. Problem is because of how spring's context cache work. It caches the
+application context based on the classes found in the @ContextConfiguration. Remock extends this mechanism and also
+handles any mocks/spies/rejects. It is not, however, able to distinguish between two tests, where you in one @Inject
+a bean which causes a side effect, and in the other are dependent on the bean not getting initialized.
 
 # Difference between Springockito and Remock
 
 The big difference between Springockito and Remock is whether or not the original implementation lives inside springs
 bean factory. While Springockito will use @Primary on all mocked/spied beans, thus taking precedence over the originals,
-they will still be injected if you @Inject List<SomeInterface>.
+they will still be injected if you @Inject List<...>.
 
 Remock takes a different approach. It takes control over Spring's bean factory and downright rejects adding the
-bean definition of mocked/spied beans.
+bean definitions of beans it knows should be mocked or rejected.

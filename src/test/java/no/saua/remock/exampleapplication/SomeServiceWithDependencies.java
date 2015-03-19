@@ -8,5 +8,9 @@ import javax.inject.Inject;
 public class SomeServiceWithDependencies {
 
     @Inject
-    AnInterface anInterface;
+    private AnInterface anInterface;
+
+    public AnInterface getDependency() {
+        return anInterface;
+    }
 }

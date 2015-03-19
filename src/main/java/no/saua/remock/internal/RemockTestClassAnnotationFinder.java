@@ -1,12 +1,9 @@
 package no.saua.remock.internal;
 
-import no.saua.remock.Reject;
+import no.saua.remock.*;
 import no.saua.remock.Reject.RejectAnnotationVisitor;
-import no.saua.remock.ReplaceWithImpl;
 import no.saua.remock.ReplaceWithImpl.ReplaceWithImplAnnotationVisitor;
-import no.saua.remock.ReplaceWithMock;
 import no.saua.remock.ReplaceWithMock.ReplaceWithMockAnnotationVisitor;
-import no.saua.remock.ReplaceWithSpy;
 import no.saua.remock.ReplaceWithSpy.ReplaceWithSpyAnnotationVisitor;
 
 import java.lang.annotation.Annotation;
@@ -29,20 +26,30 @@ public class RemockTestClassAnnotationFinder extends Entity<RemockTestClassAnnot
         annotationReaders.put(ReplaceWithMock.class, new ReplaceWithMockAnnotationVisitor());
     }
 
+    private boolean foundLazyAnnotation = false;
     private Set<SpringBeanDefiner> definers = new HashSet<>();
     private Set<SpyDefinition> spies = new HashSet<>();
     private Set<Rejecter> rejecters = new HashSet<>();
 
     public RemockTestClassAnnotationFinder(Class<?> testClass) {
-        // :: Find super classes
-        List<Class<?>> classHierarchy = new LinkedList<>();
+        // :: Find super classes and classes annotated with @RemockContextConfiguration
+        List<Class<?>> classes = new LinkedList<>();
         Class<?> currentClass = testClass;
         do {
-            classHierarchy.add(currentClass);
+            classes.add(currentClass);
+            RemockContextConfiguration annotation = currentClass.getAnnotation(RemockContextConfiguration.class);
+            if (annotation != null) {
+                classes.addAll(Arrays.asList(annotation.value()));
+            }
             currentClass = currentClass.getSuperclass();
-        } while (currentClass != null);
 
-        for (Class<?> clazz: classHierarchy) {
+        } while (currentClass != null && !currentClass.equals(Object.class));
+
+        // :: Go through each potential class, looking for Remock annotations.
+        for (Class<?> clazz : classes) {
+            if (clazz.getAnnotation(LazilyInitializeTest.class) != null) {
+                foundLazyAnnotation = true;
+            }
             for (Map.Entry<Class<? extends Annotation>, AnnotationVisitor> entry : annotationReaders.entrySet()) {
                 if (clazz.getAnnotation(entry.getKey()) != null) {
                     entry.getValue().visitClass(clazz.getAnnotation(entry.getKey()), definers, spies, rejecters);
@@ -60,6 +67,10 @@ public class RemockTestClassAnnotationFinder extends Entity<RemockTestClassAnnot
         }
     }
 
+    public boolean foundLazyAnnotation() {
+        return foundLazyAnnotation;
+    }
+
     public Set<Rejecter> getRejecters() {
         return rejecters;
     }
@@ -74,6 +85,8 @@ public class RemockTestClassAnnotationFinder extends Entity<RemockTestClassAnnot
 
     @Override
     public boolean equals(RemockTestClassAnnotationFinder other) {
-        return Objects.equals(rejecters, other.rejecters);
+        return Objects.equals(foundLazyAnnotation, other.foundLazyAnnotation)
+                        && Objects.equals(definers, other.definers) && Objects.equals(rejecters, other.rejecters)
+                        && Objects.equals(spies, other.spies);
     }
 }

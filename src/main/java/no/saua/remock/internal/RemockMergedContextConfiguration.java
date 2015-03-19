@@ -6,9 +6,9 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * To get Springs context caching mechanism working we extend the MergedContextConfiguration and modifying the
- * equals-method to take into account what beans were {@linkplain Rejecter rejected} and what beans were {@link
- * MockDefinition mocked}.
+ * To get Springs context caching mechanism working we extend the MergedContextConfiguration and
+ * modifying the equals-method to take into account what beans were {@linkplain Rejecter rejected}
+ * and what beans were {@link MockDefinition mocked}.
  */
 public class RemockMergedContextConfiguration extends MergedContextConfiguration {
 
@@ -28,8 +28,8 @@ public class RemockMergedContextConfiguration extends MergedContextConfiguration
     public boolean equals(Object other) {
         if (super.equals(other) && other instanceof RemockMergedContextConfiguration) {
             RemockMergedContextConfiguration otherObj = (RemockMergedContextConfiguration) other;
-            return super.equals(other) && Objects.equals(rejecters, otherObj.rejecters) && Objects.equals(definers,
-                    otherObj.definers) && Objects.equals(spies, otherObj.spies);
+            return super.equals(other) && Objects.equals(rejecters, otherObj.rejecters)
+                            && Objects.equals(definers, otherObj.definers) && Objects.equals(spies, otherObj.spies);
         }
         return false;
     }

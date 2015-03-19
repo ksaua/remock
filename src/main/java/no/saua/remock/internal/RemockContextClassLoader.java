@@ -14,13 +14,14 @@ public class RemockContextClassLoader extends AnnotationConfigContextLoader {
     private Set<SpringBeanDefiner> definers;
     private Set<SpyDefinition> spyDefinitions;
     private RemockBeanFactory beanFactory;
+    private boolean foundLazyAnnotation;
 
     @Override
     public void prepareContext(GenericApplicationContext context) {
         try {
             Field beanFactoryField = GenericApplicationContext.class.getDeclaredField("beanFactory");
             beanFactoryField.setAccessible(true);
-            beanFactory = new RemockBeanFactory(rejecters);
+            beanFactory = new RemockBeanFactory(rejecters, foundLazyAnnotation);
             beanFactoryField.set(context, beanFactory);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException("Unable to perform hack", e);
@@ -44,6 +45,7 @@ public class RemockContextClassLoader extends AnnotationConfigContextLoader {
         return classes;
     }
 
+
     @Override
     public void processContextConfiguration(ContextConfigurationAttributes configAttributes) {
         super.processContextConfiguration(configAttributes);
@@ -56,6 +58,7 @@ public class RemockContextClassLoader extends AnnotationConfigContextLoader {
             rejecters = testClassHandler.getRejecters();
             definers = testClassHandler.getDefiners();
             spyDefinitions = testClassHandler.getSpies();
+            foundLazyAnnotation = testClassHandler.foundLazyAnnotation();
         }
     }
 }
