@@ -47,7 +47,7 @@ public class RemockTestClassAnnotationFinder extends Entity<RemockTestClassAnnot
 
         // :: Go through each potential class, looking for Remock annotations.
         for (Class<?> clazz : classes) {
-            if (clazz.getAnnotation(LazilyInitializeTest.class) != null) {
+            if (clazz.getAnnotation(LazilyInitialized.class) != null) {
                 foundLazyAnnotation = true;
             }
             for (Map.Entry<Class<? extends Annotation>, AnnotationVisitor> entry : annotationReaders.entrySet()) {

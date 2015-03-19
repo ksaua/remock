@@ -4,7 +4,7 @@ import no.saua.remock.exampleapplication.ServiceWhichShouldNotBeInstantiaed;
 import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
 
-@LazilyInitializeTest
+@LazilyInitialized
 @ContextConfiguration(classes = ServiceWhichShouldNotBeInstantiaed.class)
 public class LazyInitializedTest extends CommonTest {
     @Test

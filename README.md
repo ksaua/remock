@@ -141,14 +141,14 @@ For more detailed examples see the test cases.
 
 ## Lazily intializing beans
 
-Annotating your test with `@LazilyInitializeTest` causes Remock to force all beans to be lazily initialized. For large
+Annotating your test with `@LazilyInitialized` causes Remock to force all beans to be lazily initialized. For large
 applications this can be useful for increasing test performance, allowing you to only instantiate the beans necessary
 for the test.
 
     @RunWith(SpringJUnit4ClassRunner.class)
     @BootstrapWith(RemockBootstrapper.class)
     @ContextConfiguration(classes = {SomeService.class, SomeOtherService.class})
-    @LazilyInitializeTest
+    @LazilyInitialized
     public class RemockContextConfigurationTest {
 
         @Inject
@@ -162,16 +162,16 @@ for the test.
 
 
 
-!!NOTE!! You should never depend on this. Problem is because of how spring's context cache work. It caches the
-application context based on the classes found in the @ContextConfiguration. Remock extends this mechanism and also
-handles any mocks/spies/rejects. It is not, however, able to distinguish between two tests, where you in one @Inject
-a bean which causes a side effect, and in the other are dependent on the bean not getting initialized.
+!!NOTE!! You should never depend on this. Problem is due spring's context cache mechanism. It caches the application
+context based on the classes found in the @ContextConfiguration. Remock extends this and also handles any
+mocks/spies/rejects. It is not, however, able to distinguish between two tests, where you in one test @Inject a bean
+which causes a side effect, and in the other test is dependent on that bean not being initialized.
 
 # Difference between Springockito and Remock
 
 The big difference between Springockito and Remock is whether or not the original implementation lives inside springs
 bean factory. While Springockito will use @Primary on all mocked/spied beans, thus taking precedence over the originals,
-they will still be injected if you @Inject List<...>.
+they will still be injected if you @Inject List<...>, or @Inject Map<String, ...>.
 
 Remock takes a different approach. It takes control over Spring's bean factory and downright rejects adding the
 bean definitions of beans it knows should be mocked or rejected.
