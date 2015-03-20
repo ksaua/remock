@@ -77,8 +77,10 @@ The following code will wrap the original `SomeDependency` instance with a Mocki
 
 The following code will replace `ServiceImpl` with `ServiceMock`
 
+    @RunWith(SpringJUnit4ClassRunner.class)
+    @BootstrapWith(RemockBootstrapper.class)
     @ContextConfiguration(classes = {ServiceImpl.class})
-    public static class ReplaceWithImplAnnotatedOnFieldTest extends CommonTest {
+    public static class ReplaceWithImplAnnotatedOnFieldTest {
 
         @Inject
         @ReplaceWithImpl(value = ServiceImpl.class, with = ServiceMock.class)
@@ -107,8 +109,8 @@ Spring's bean factory.
         }
     }
 
-This is a bit out of the ordinary, but it's quite powerful. This is useful when you inject List or Maps of an interface
-or a superclass and want to remove some beans from the bean factory.
+This is a bit out of the ordinary, but it's quite powerful. This is particularly useful when you inject List or Maps of
+ an interface or a superclass and want to remove some beans from the bean factory.
 
 Another use-case is for controlling which beans are defined and lifecycled when a @ComponentScan is used.
 
@@ -162,10 +164,11 @@ for the test.
 
 
 
-!!NOTE!! You should never depend on this. Problem is due spring's context cache mechanism. It caches the application
-context based on the classes found in the @ContextConfiguration. Remock extends this and also handles any
-mocks/spies/rejects. It is not, however, able to distinguish between two tests, where you in one test @Inject a bean
-which causes a side effect, and in the other test is dependent on that bean not being initialized.
+!!NOTE!! You should never depend on this. Problem is due to Spring's context cache mechanism. Spring caches the
+application context based on the @ContextConfiguration. Remock extends this to also handles any
+mocks/spies/rejects. Spring is not, however, able to distinguish between two tests, where you in one test @Inject a bean
+which causes a side effect, and in the other test is dependent on that bean not being initialized. If you are
+dependent on something like this, you should probably use @Reject.
 
 # Difference between Springockito and Remock
 

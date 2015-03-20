@@ -20,7 +20,7 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Reject(SomeService.class)
-@ReplaceWithSpy(SomeServiceWithDependencies.class)
+@WrapWithSpy(SomeServiceWithDependencies.class)
 @ReplaceWithMock(AnInterface.class)
 @ContextConfiguration(classes = {SomeService.class, SomeServiceWithDependencies.class, AnInterfaceImplOne.class},
                 loader = RemockContextClassLoader.class)

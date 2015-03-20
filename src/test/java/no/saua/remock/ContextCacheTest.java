@@ -31,7 +31,7 @@ public class ContextCacheTest {
     // :: The context of this test will be cached
     @ContextConfiguration(classes = SomeService.class)
     @Reject(SomeServiceWithDependencies.class)
-    @ReplaceWithSpy(AnInterface.class)
+    @WrapWithSpy(AnInterface.class)
     public static class SomeTestClass extends CommonTest {
 
         @Inject
@@ -47,7 +47,7 @@ public class ContextCacheTest {
     // :: This test should use same spring context as previous test.
     @ContextConfiguration(classes = SomeService.class)
     @Reject(SomeServiceWithDependencies.class)
-    @ReplaceWithSpy(AnInterface.class)
+    @WrapWithSpy(AnInterface.class)
     public static class SomeTestClassEqual extends CommonTest {
 
         @Inject
@@ -78,7 +78,7 @@ public class ContextCacheTest {
 
     // :: This test should NOT use same spring context as first test.
     @ContextConfiguration(classes = SomeService.class)
-    @ReplaceWithSpy(AnInterface.class)
+    @WrapWithSpy(AnInterface.class)
     public static class SomeTestClassNotEqual2 extends CommonTest {
 
         @Inject

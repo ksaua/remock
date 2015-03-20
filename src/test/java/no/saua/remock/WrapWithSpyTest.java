@@ -13,9 +13,9 @@ import javax.inject.Inject;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Enclosed.class)
-public class SpyTest {
+public class WrapWithSpyTest {
 
-    @ReplaceWithSpy(AnInterface.class)
+    @WrapWithSpy(AnInterface.class)
     @ContextConfiguration(classes = {AnInterfaceImplOne.class, AnInterfaceImplTwo.class})
     public static class SpyAllOfTypeTest extends CommonTest {
 
@@ -32,7 +32,7 @@ public class SpyTest {
         }
     }
 
-    @ReplaceWithSpy({AnInterfaceImplOne.class, AnInterfaceImplTwo.class})
+    @WrapWithSpy({AnInterfaceImplOne.class, AnInterfaceImplTwo.class})
     @ContextConfiguration(classes = {AnInterfaceImplOne.class, AnInterfaceImplTwo.class})
     public static class SpyAllOfMultipleTypes extends CommonTest {
 
@@ -49,7 +49,7 @@ public class SpyTest {
         }
     }
 
-    @ReplaceWithSpy(beanNames = {"anInterfaceImplOne", "anInterfaceImplTwo"})
+    @WrapWithSpy(beanNames = {"anInterfaceImplOne", "anInterfaceImplTwo"})
     @ContextConfiguration(classes = {AnInterfaceImplOne.class, AnInterfaceImplTwo.class})
     public static class SpyAllOfMultipleNamed extends CommonTest {
 

@@ -11,7 +11,25 @@ import java.util.Set;
 
 /**
  * Rejects any class with the class {@link #value()} and replaces it with a {@link #with()}. Useful
- * if you want to actually implement a complete mock class.
+ * if you want to actually implement a complete mock class. Usage:
+ * 
+ * <pre>
+ * &#064;RunWith(SpringJUnit4ClassRunner.class)
+ * &#064;BootstrapWith(RemockBootstrapper.class)
+ * &#064;ContextConfiguration(classes = {ServiceImpl.class})
+ * public static class ReplaceWithImplAnnotatedOnFieldTest {
+ * 
+ *     &#064;Inject
+ *     &#064;ReplaceWithImpl(value = ServiceImpl.class, with = ServiceMock.class)
+ *     public Service service;
+ * 
+ *     &#064;Test
+ *     public void test() {
+ *         assertEquals(ServiceMock.class, service.getClass());
+ *     }
+ * }
+ * </pre>
+ * 
  */
 @Target({ElementType.TYPE, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)

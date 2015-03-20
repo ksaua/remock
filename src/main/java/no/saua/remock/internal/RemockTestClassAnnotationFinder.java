@@ -4,7 +4,7 @@ import no.saua.remock.*;
 import no.saua.remock.Reject.RejectAnnotationVisitor;
 import no.saua.remock.ReplaceWithImpl.ReplaceWithImplAnnotationVisitor;
 import no.saua.remock.ReplaceWithMock.ReplaceWithMockAnnotationVisitor;
-import no.saua.remock.ReplaceWithSpy.ReplaceWithSpyAnnotationVisitor;
+import no.saua.remock.WrapWithSpy.ReplaceWithSpyAnnotationVisitor;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -22,7 +22,7 @@ public class RemockTestClassAnnotationFinder extends Entity<RemockTestClassAnnot
         annotationReaders = new HashMap<>();
         annotationReaders.put(Reject.class, new RejectAnnotationVisitor());
         annotationReaders.put(ReplaceWithImpl.class, new ReplaceWithImplAnnotationVisitor());
-        annotationReaders.put(ReplaceWithSpy.class, new ReplaceWithSpyAnnotationVisitor());
+        annotationReaders.put(WrapWithSpy.class, new ReplaceWithSpyAnnotationVisitor());
         annotationReaders.put(ReplaceWithMock.class, new ReplaceWithMockAnnotationVisitor());
     }
 

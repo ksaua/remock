@@ -26,7 +26,7 @@ public class ResetTest extends CommonTest {
     public AnInterfaceImplOne mock;
 
     @Inject
-    @ReplaceWithSpy(AnInterfaceImplTwo.class)
+    @WrapWithSpy(AnInterfaceImplTwo.class)
     public AnInterfaceImplTwo spy;
 
     @Test

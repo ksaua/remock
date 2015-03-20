@@ -10,7 +10,7 @@ import org.springframework.test.context.ContextConfiguration;
 import javax.inject.Inject;
 
 /**
- * Test
+ * Tests {@link RemockContextConfiguration} correctly pulls in the remock annotations.
  */
 @ContextConfiguration(classes = {SomeServiceWithDependencies.class, AnInterfaceImplOne.class, AnInterfaceImplTwo.class})
 @RemockContextConfiguration(RemockConfig.class)
