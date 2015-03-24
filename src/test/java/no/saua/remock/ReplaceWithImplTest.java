@@ -36,7 +36,6 @@ public class ReplaceWithImplTest {
     @ContextConfiguration(classes = {AnInterfaceImplOne.class})
     public static class ReplaceWithImplAnnotatedOnFieldTest extends CommonTest {
 
-        @Inject
         @ReplaceWithImpl(value = AnInterfaceImplOne.class, with = AnInterfaceImplTwo.class)
         public AnInterface anInterface;
 

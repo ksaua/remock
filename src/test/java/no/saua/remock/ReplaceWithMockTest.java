@@ -5,8 +5,6 @@ import no.saua.remock.exampleapplication.SomeService;
 import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
 
-import javax.inject.Inject;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -14,7 +12,6 @@ import static org.junit.Assert.assertTrue;
 public class ReplaceWithMockTest extends CommonTest {
 
     @ReplaceWithMock
-    @Inject
     public SomeService someService;
 
     @Test

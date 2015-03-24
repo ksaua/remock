@@ -1,6 +1,7 @@
 package no.saua.remock;
 
 import no.saua.remock.internal.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -11,7 +12,9 @@ import java.util.Set;
 
 /**
  * Rejects any class with the class {@link #value()} and replaces it with a {@link #with()}. Useful
- * if you want to actually implement a complete mock class. Usage:
+ * if you want to actually implement a complete mock class. Note that this annotation also is a
+ * meta-annotation for {@link Autowired} causing the annotated field to automatically be injected.
+ * Usage:
  * 
  * <pre>
  * &#064;RunWith(SpringJUnit4ClassRunner.class)
@@ -19,7 +22,6 @@ import java.util.Set;
  * &#064;ContextConfiguration(classes = {ServiceImpl.class})
  * public static class ReplaceWithImplAnnotatedOnFieldTest {
  * 
- *     &#064;Inject
  *     &#064;ReplaceWithImpl(value = ServiceImpl.class, with = ServiceMock.class)
  *     public Service service;
  * 
@@ -31,6 +33,7 @@ import java.util.Set;
  * </pre>
  * 
  */
+@Autowired
 @Target({ElementType.TYPE, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ReplaceWithImpl {

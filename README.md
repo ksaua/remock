@@ -11,7 +11,7 @@ Remock allows you to easily:
 * Replace any spring bean with a Mockito mock.
 * Replace any spring bean with a Mockito spy.
 * Replace any spring bean with a different implementation.
-* Rejecting any spring bean from being created without replacing it.
+* Reject any spring bean from being created without replacing it.
 
 Note: Remock currently only works with Spring 4.1. Support for Spring 4.0 and 3.2 is planned.
 
@@ -19,7 +19,7 @@ Note: Remock currently only works with Spring 4.1. Support for Spring 4.0 and 3.
 
 If you're a gradle user, add the following to your build.gradle file
 
-    testCompile 'no.saua.remock:remock:0.2.0'
+    testCompile 'no.saua.remock:remock:0.2.2'
 
 # Using it
 
@@ -28,7 +28,8 @@ test-class or field with `@Reject`, `@ReplaceWithImpl`, `@ReplaceWithMock` or `@
 
 ## Mocking out a dependency:
 
-The following code will replace `SomeDependency` with a Mockito mock.
+The following code will replace `SomeDependency` with a Mockito mock. Since @ReplaceWithMock is a meta-annotation for
+ `@Autowired`, it will also automatically be injected into the test. Usage:
 
     @RunWith(SpringJUnit4ClassRunner.class)
     @BootstrapWith(RemockBootstrapper.class)
@@ -36,7 +37,6 @@ The following code will replace `SomeDependency` with a Mockito mock.
     public class ReplaceWithMockTest {
 
         @ReplaceWithMock
-        @Inject
         public SomeDependency someDependency;
 
         @Inject
@@ -50,9 +50,12 @@ The following code will replace `SomeDependency` with a Mockito mock.
         }
     }
 
+`@ReplaceWithMock` can also be annotated directly test-class.
+
 ## Spying on a dependency:
 
-The following code will wrap the original `SomeDependency` instance with a Mockito spy.
+The following code will wrap the original `SomeDependency` instance with a Mockito spy. Since `@WrapWithSpy` is a
+meta-annotation for `@Autowired`, it will also automatically be injected into the test. Usage:
 
     @RunWith(SpringJUnit4ClassRunner.class)
     @BootstrapWith(RemockBootstrapper.class)
@@ -60,7 +63,6 @@ The following code will wrap the original `SomeDependency` instance with a Mocki
     public class ReplaceWithMockTest {
 
         @WrapWithSpy
-        @Inject
         public SomeDependency someDependency;
 
         @Inject
@@ -73,16 +75,19 @@ The following code will wrap the original `SomeDependency` instance with a Mocki
         }
     }
 
+
+`@WrapWithSpy` can also be annotated directly on the test-class.
+
 ## Replacing a bean with a non-mockito mock
 
-The following code will replace `ServiceImpl` with `ServiceMock`
+The following code will replace `ServiceImpl` with `ServiceMock`. Since @ReplaceWithImpl is a meta-annotation the
+bean will be auto injected. Usage:
 
     @RunWith(SpringJUnit4ClassRunner.class)
     @BootstrapWith(RemockBootstrapper.class)
     @ContextConfiguration(classes = {ServiceImpl.class})
     public static class ReplaceWithImplAnnotatedOnFieldTest {
 
-        @Inject
         @ReplaceWithImpl(value = ServiceImpl.class, with = ServiceMock.class)
         public Service service;
 
@@ -91,6 +96,8 @@ The following code will replace `ServiceImpl` with `ServiceMock`
             assertEquals(ServiceMock.class, service.getClass());
         }
     }
+
+`@ReplaceWithImpl` can also be annotated directly on the test-class.
 
 ## Rejecting a dependency:
 
@@ -101,7 +108,7 @@ Spring's bean factory.
     @BootstrapWith(RemockBootstrapper.class)
     @Reject(SomeDangerousService.class)
     @ContextConfiguration(classes = SomeService.class)
-    public class ReplaceWithMockTest {
+    public class RejectTest {
 
         @Test
         public void test() {
@@ -112,12 +119,14 @@ Spring's bean factory.
 This is a bit out of the ordinary, but it's quite powerful. This is particularly useful when you inject List or Maps of
  an interface or a superclass and want to remove some beans from the bean factory.
 
-Another use-case is for controlling which beans are defined and lifecycled when a @ComponentScan is used.
+Another use-case is for controlling which beans are defined and lifecycled when a `@ComponentScan` is used.
+
+`@Reject` can also be annotated directly on the test-class.
 
 ## Grouping common mocks
 
 Often tests require the same mocks. Remock allows you to easily group mocks, either by specifying the remock-annotations
-on a superclass, or by using the @RemockContextConfiguration.
+on a superclass, or by using the `@RemockContextConfiguration`.
 
     @RunWith(SpringJUnit4ClassRunner.class)
     @BootstrapWith(RemockBootstrapper.class)

@@ -4,6 +4,7 @@ import no.saua.remock.internal.AnnotationVisitor;
 import no.saua.remock.internal.Rejecter;
 import no.saua.remock.internal.SpringBeanDefiner;
 import no.saua.remock.internal.SpyDefinition;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -14,7 +15,8 @@ import java.util.Set;
 
 /**
  * Wraps the original spring bean with a Mockito spy. Allowing you to verify calls made on that
- * bean. Usage:
+ * bean. Note that this annotation also is a meta-annotation for {@link Autowired} causing the spied
+ * field to also be injected. Usage:
  * 
  * <pre>
  * &#064;RunWith(SpringJUnit4ClassRunner.class)
@@ -23,21 +25,21 @@ import java.util.Set;
  * public class ReplaceWithMockTest {
  * 
  *     &#064;WrapWithSpy
- *     &#064;Inject
  *     public SomeDependency someDependency;
  * 
  *     &#064;Inject
  *     public SomeService someService;
  * 
  *     &#064;Test
- *  public void test() {
- *  someService.getHalf()
- *  verify(someDependency).method();
- *  }
+ *     public void test() {
+ *         someService.getHalf()
+ *         verify(someDependency).method();
+ *     }
  * }
  * 
  * </pre>
  */
+@Autowired
 @Target({ElementType.TYPE, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface WrapWithSpy {

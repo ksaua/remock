@@ -49,6 +49,22 @@ public class WrapWithSpyTest {
         }
     }
 
+    @ContextConfiguration(classes = {AnInterfaceImplOne.class, AnInterfaceImplTwo.class})
+    public static class SpyFields extends CommonTest {
+
+        @WrapWithSpy
+        AnInterfaceImplOne one;
+
+        @WrapWithSpy
+        AnInterfaceImplTwo two;
+
+        @Test
+        public void test() {
+            assertTrue(isSpy(one));
+            assertTrue(isSpy(two));
+        }
+    }
+
     @WrapWithSpy(beanNames = {"anInterfaceImplOne", "anInterfaceImplTwo"})
     @ContextConfiguration(classes = {AnInterfaceImplOne.class, AnInterfaceImplTwo.class})
     public static class SpyAllOfMultipleNamed extends CommonTest {
