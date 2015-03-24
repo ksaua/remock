@@ -19,7 +19,7 @@ Note: Remock currently only works with Spring 4.1. Support for Spring 4.0 and 3.
 
 If you're a gradle user, add the following to your build.gradle file
 
-    testCompile 'no.saua.remock:remock:0.2.2'
+    testCompile 'no.saua.remock:remock:0.2.3'
 
 # Using it
 
