@@ -16,11 +16,11 @@ public class RemockBeanFactory extends DefaultListableBeanFactory {
 
     private Set<Rejecter> rejecters;
 
-    private boolean setEverythingToLazy = false;
+    private boolean foundEagerAnnotation = false;
 
-    public RemockBeanFactory(Set<Rejecter> rejecters, boolean setEverythingToLazy) {
+    public RemockBeanFactory(Set<Rejecter> rejecters, boolean foundEagerAnnotation) {
         this.rejecters = rejecters;
-        this.setEverythingToLazy = setEverythingToLazy;
+        this.foundEagerAnnotation = foundEagerAnnotation;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class RemockBeanFactory extends DefaultListableBeanFactory {
             if (isBeanRejected(beanName, beanClazz)) {
                 log.info("Rejected bean [{}] with definiton [{}]", beanName, beanDefinition);
             } else {
-                if (setEverythingToLazy) {
+                if (!foundEagerAnnotation) {
                     beanDefinition.setLazyInit(true);
                 }
                 super.registerBeanDefinition(beanName, beanDefinition);

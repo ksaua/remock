@@ -26,7 +26,7 @@ public class RemockTestClassAnnotationFinder extends Entity<RemockTestClassAnnot
         annotationReaders.put(ReplaceWithMock.class, new ReplaceWithMockAnnotationVisitor());
     }
 
-    private boolean foundLazyAnnotation = false;
+    private boolean foundEagerAnnotation = false;
     private Set<SpringBeanDefiner> definers = new HashSet<>();
     private Set<SpyDefinition> spies = new HashSet<>();
     private Set<Rejecter> rejecters = new HashSet<>();
@@ -47,8 +47,8 @@ public class RemockTestClassAnnotationFinder extends Entity<RemockTestClassAnnot
 
         // :: Go through each potential class, looking for Remock annotations.
         for (Class<?> clazz : classes) {
-            if (clazz.getAnnotation(LazilyInitialized.class) != null) {
-                foundLazyAnnotation = true;
+            if (clazz.getAnnotation(EagerlyInitialized.class) != null) {
+                foundEagerAnnotation = true;
             }
             for (Map.Entry<Class<? extends Annotation>, AnnotationVisitor> entry : annotationReaders.entrySet()) {
                 if (clazz.getAnnotation(entry.getKey()) != null) {
@@ -67,8 +67,8 @@ public class RemockTestClassAnnotationFinder extends Entity<RemockTestClassAnnot
         }
     }
 
-    public boolean foundLazyAnnotation() {
-        return foundLazyAnnotation;
+    public boolean foundEagerAnnotation() {
+        return foundEagerAnnotation;
     }
 
     public Set<Rejecter> getRejecters() {
@@ -85,7 +85,7 @@ public class RemockTestClassAnnotationFinder extends Entity<RemockTestClassAnnot
 
     @Override
     public boolean equals(RemockTestClassAnnotationFinder other) {
-        return Objects.equals(foundLazyAnnotation, other.foundLazyAnnotation)
+        return Objects.equals(foundEagerAnnotation, other.foundEagerAnnotation)
                         && Objects.equals(definers, other.definers) && Objects.equals(rejecters, other.rejecters)
                         && Objects.equals(spies, other.spies);
     }

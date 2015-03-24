@@ -73,7 +73,7 @@ The following code will wrap the original `SomeDependency` instance with a Mocki
         }
     }
 
-# Replacing a bean with a non-mockito mock
+## Replacing a bean with a non-mockito mock
 
 The following code will replace `ServiceImpl` with `ServiceMock`
 
@@ -141,11 +141,10 @@ on a superclass, or by using the @RemockContextConfiguration.
 
 For more detailed examples see the test cases.
 
-## Lazily intializing beans
+## Eagerly intializing beans
 
-Annotating your test with `@LazilyInitialized` causes Remock to force all beans to be lazily initialized. For large
-applications this can be useful for increasing test performance, allowing you to only instantiate the beans necessary
-for the test.
+Remock will by default set all your beans to be lazily initialized. Annotating your test with `@EagerlyInitialized`
+disables the lazy init.
 
     @RunWith(SpringJUnit4ClassRunner.class)
     @BootstrapWith(RemockBootstrapper.class)
@@ -162,13 +161,6 @@ for the test.
         }
     }
 
-
-
-!!NOTE!! You should never depend on this. Problem is due to Spring's context cache mechanism. Spring caches the
-application context based on the @ContextConfiguration. Remock extends this to also handles any
-mocks/spies/rejects. Spring is not, however, able to distinguish between two tests, where you in one test @Inject a bean
-which causes a side effect, and in the other test is dependent on that bean not being initialized. If you are
-dependent on something like this, you should probably use @Reject.
 
 # Difference between Springockito and Remock
 

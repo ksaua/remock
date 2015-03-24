@@ -6,9 +6,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotated on test-class this will force all beans to be lazy.
+ * Annotated on test-class this will force all beans to be eagerly initialized.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface LazilyInitialized {
+public @interface EagerlyInitialized {
 }
