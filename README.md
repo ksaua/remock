@@ -133,8 +133,8 @@ on a superclass, or by using the @RemockContextConfiguration.
             isMock(someServiceWithDependencies.getDependency());
         }
 
-        @ReplaceWithMock(SomeDependency.class)
-        @Reject(SomeOtherDependency.class)
+        @ReplaceWithMock(SomeServiceWithDependencies.class)
+        @Reject(SomeDependency.class)
         public static class MyRemockConfig {
         }
     }
