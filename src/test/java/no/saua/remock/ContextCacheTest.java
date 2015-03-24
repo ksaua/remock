@@ -19,8 +19,8 @@ import static org.junit.Assert.*;
  * Tests various forms of
  */
 @RunWith(Suite.class)
-@SuiteClasses({SomeTestClass.class, SomeTestClassEqual.class, SomeTestClassNotEqual1.class,
-        SomeTestClassNotEqual2.class, SomeTestClassNotEqual3.class})
+@SuiteClasses({SomeTestClass.class, SomeTestClassEqual.class, SomeTestClassNotEqual0.class,
+                SomeTestClassNotEqual1.class, SomeTestClassNotEqual2.class, SomeTestClassNotEqual3.class})
 public class ContextCacheTest {
 
     private static ApplicationContext cachedSpringContextWithRejectAndSpy;
@@ -57,6 +57,25 @@ public class ContextCacheTest {
         public void test() {
             assertNotNull(springContext);
             assertEquals("Should get the exact same spring context", cachedSpringContextWithRejectAndSpy, springContext);
+        }
+    }
+
+    // :: This test should use same spring context as previous test.
+    @EagerlyInitialized
+    @ContextConfiguration(classes = SomeService.class)
+    @Reject(SomeServiceWithDependencies.class)
+    @WrapWithSpy(AnInterface.class)
+    public static class SomeTestClassNotEqual0 extends CommonTest {
+
+        @Inject
+        private ApplicationContext springContext;
+
+        @Test
+        public void test() {
+            assertNotNull(springContext);
+            assertNotNull(cachedSpringContextWithRejectAndSpy);
+            assertNotEquals("Should NOT get the exact same spring context", cachedSpringContextWithRejectAndSpy,
+                            springContext);
         }
     }
 
