@@ -149,15 +149,12 @@ disables the lazy init.
     @RunWith(SpringJUnit4ClassRunner.class)
     @BootstrapWith(RemockBootstrapper.class)
     @ContextConfiguration(classes = {SomeService.class, SomeOtherService.class})
-    @LazilyInitialized
+    @EagerlyInitialized
     public class RemockContextConfigurationTest {
-
-        @Inject
-        private SomeService someService;
 
         @Test
         public void test() {
-            isMock(someServiceWithDependencies.getDependency());
+            /* ... */
         }
     }
 
