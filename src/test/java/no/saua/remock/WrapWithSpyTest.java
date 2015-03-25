@@ -15,15 +15,18 @@ import static org.junit.Assert.assertTrue;
 @RunWith(Enclosed.class)
 public class WrapWithSpyTest {
 
+    /**
+     * Replaces all implementations of AnInterface with spies.
+     */
     @WrapWithSpy(AnInterface.class)
     @ContextConfiguration(classes = {AnInterfaceImplOne.class, AnInterfaceImplTwo.class})
     public static class SpyAllOfTypeTest extends CommonTest {
 
         @Inject
-        AnInterfaceImplOne one;
+        private AnInterfaceImplOne one;
 
         @Inject
-        AnInterfaceImplTwo two;
+        private AnInterfaceImplTwo two;
 
         @Test
         public void test() {
@@ -32,15 +35,18 @@ public class WrapWithSpyTest {
         }
     }
 
+    /**
+     * Replaces the given classes with spies.
+     */
     @WrapWithSpy({AnInterfaceImplOne.class, AnInterfaceImplTwo.class})
     @ContextConfiguration(classes = {AnInterfaceImplOne.class, AnInterfaceImplTwo.class})
     public static class SpyAllOfMultipleTypes extends CommonTest {
 
         @Inject
-        AnInterfaceImplOne one;
+        private AnInterfaceImplOne one;
 
         @Inject
-        AnInterfaceImplTwo two;
+        private AnInterfaceImplTwo two;
 
         @Test
         public void test() {
@@ -49,14 +55,17 @@ public class WrapWithSpyTest {
         }
     }
 
+    /**
+     * Replaces the annotated fields with spies.
+     */
     @ContextConfiguration(classes = {AnInterfaceImplOne.class, AnInterfaceImplTwo.class})
     public static class SpyFields extends CommonTest {
 
         @WrapWithSpy
-        AnInterfaceImplOne one;
+        private AnInterfaceImplOne one;
 
         @WrapWithSpy
-        AnInterfaceImplTwo two;
+        private AnInterfaceImplTwo two;
 
         @Test
         public void test() {
@@ -65,15 +74,18 @@ public class WrapWithSpyTest {
         }
     }
 
+    /**
+     * Replaces the given bean names with spies.
+     */
     @WrapWithSpy(beanNames = {"anInterfaceImplOne", "anInterfaceImplTwo"})
     @ContextConfiguration(classes = {AnInterfaceImplOne.class, AnInterfaceImplTwo.class})
     public static class SpyAllOfMultipleNamed extends CommonTest {
 
         @Inject
-        AnInterfaceImplOne one;
+        private AnInterfaceImplOne one;
 
         @Inject
-        AnInterfaceImplTwo two;
+        private AnInterfaceImplTwo two;
 
         @Test
         public void test() {

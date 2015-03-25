@@ -15,7 +15,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 /**
- * Checks that Mocks and spies are reset after every test-method
+ * Checks that Mocks and spies are reset after every test-method. Note that the ordering of the test are significant.
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @ContextConfiguration(classes = {SomeService.class, AnInterfaceImplOne.class, AnInterfaceImplTwo.class})

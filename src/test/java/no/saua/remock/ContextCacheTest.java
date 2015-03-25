@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import static org.junit.Assert.*;
 
 /**
- * Tests various forms of
+ * Tests various forms of cache scenarios. Note that the ordering in the @SuiteClasses is significant.
  */
 @RunWith(Suite.class)
 @SuiteClasses({SomeTestClass.class, SomeTestClassEqual.class, SomeTestClassNotEqual0.class,

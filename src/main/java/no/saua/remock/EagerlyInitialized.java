@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotated on test-class this will force all beans to be eagerly initialized.
+ * Annotated on test-class this will disable Remock from telling spring to lazily initialize all beans.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

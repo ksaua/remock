@@ -9,6 +9,9 @@ import javax.annotation.PostConstruct;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Checks that @EagerlyInitialized actually eagerly initializes the bean even though it is not @Inject'ed.
+ */
 @EagerlyInitialized
 @ContextConfiguration(classes = EagerService.class)
 public class EagerlyInitializedTest extends CommonTest {

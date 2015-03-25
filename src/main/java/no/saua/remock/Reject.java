@@ -50,7 +50,7 @@ import java.util.Set;
  *
  * &#064;BootstrapWith(RemockBootstrapper.class)
  * &#064;ContextConfiguration(classes = SomeClass.class)
- * &#064;Reject(beanName = SomeDependency.class)
+ * &#064;Reject(beanName = "myBean")
  * public class MyTest {
  * }
  * </pre>

@@ -3,20 +3,43 @@ package no.saua.remock;
 import no.saua.remock.exampleapplication.ConfigurationClass;
 import no.saua.remock.exampleapplication.SomeService;
 import org.junit.Test;
+import org.junit.experimental.runners.Enclosed;
+import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
+
+import javax.inject.Inject;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-@ContextConfiguration(classes = ConfigurationClass.class)
-public class ReplaceWithMockTest extends CommonTest {
+@RunWith(Enclosed.class)
+public class ReplaceWithMockTest {
 
-    @ReplaceWithMock
-    public SomeService someService;
+    @ReplaceWithMock(SomeService.class)
+    @ContextConfiguration(classes = ConfigurationClass.class)
+    public static class ReplaceWithMockClassTest extends CommonTest {
 
-    @Test
-    public void test() {
-        assertFalse(someService.getClass().equals(SomeService.class));
-        assertTrue(isMock(someService));
+        @Inject
+        public SomeService someService;
+
+        @Test
+        public void test() {
+            assertFalse(someService.getClass().equals(SomeService.class));
+            assertTrue(isMock(someService));
+        }
     }
+
+    @ContextConfiguration(classes = ConfigurationClass.class)
+    public static class ReplaceWithMockFieldTest extends CommonTest {
+
+        @ReplaceWithMock
+        public SomeService someService;
+
+        @Test
+        public void test() {
+            assertFalse(someService.getClass().equals(SomeService.class));
+            assertTrue(isMock(someService));
+        }
+    }
+
 }
