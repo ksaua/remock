@@ -1,6 +1,20 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'net.saliman:gradle-cobertura-plugin:2.0.0' // cobertura plugin
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.3.1'
+    }
+}
+
+
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'signing'
+apply plugin: 'cobertura'
+apply plugin: 'com.github.kt3k.coveralls'
 
 group = 'no.saua.remock'
 sourceCompatibility = 1.7
@@ -72,6 +86,8 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.3'
     distributionUrl = "http://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
 }
+
+cobertura.coverageFormats = ['html', 'xml']
 
 // Only configure uploadArchives if username/password is set.
 if (project.hasProperty("sonatypeUsername")) {

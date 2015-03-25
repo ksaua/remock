@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/ksaua/remock.svg?branch=master)](https://travis-ci.org/ksaua/remock)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/no.saua.remock/remock/badge.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22no.saua.remock%22)
-
+[![Coverage Status](https://coveralls.io/repos/ksaua/remock/badge.svg)](https://coveralls.io/r/ksaua/remock)
 
 Remock is a small library which helps integration testing spring applications.
 It is heavily inspired by [springockito-annotations](https://bitbucket.org/kubek2k/springockito/wiki/Home) which
