@@ -68,6 +68,11 @@ artifacts {
     archives javadocJar, sourcesJar
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.3'
+    distributionUrl = "http://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
+}
+
 // Only configure uploadArchives if username/password is set.
 if (project.hasProperty("sonatypeUsername")) {
     signing {

@@ -1,6 +1,8 @@
 # Remock
 
 [![Build Status](https://travis-ci.org/ksaua/remock.svg?branch=master)](https://travis-ci.org/ksaua/remock)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/no.saua.remock/remock/badge.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22no.saua.remock%22)
+
 
 Remock is a small library which helps integration testing spring applications.
 It is heavily inspired by [springockito-annotations](https://bitbucket.org/kubek2k/springockito/wiki/Home) which
@@ -17,9 +19,8 @@ Note: Remock currently only works with Spring 4.1. Support for Spring 4.0 and 3.
 
 # Getting it
 
-If you're a gradle user, add the following to your build.gradle file
-
-    testCompile 'no.saua.remock:remock:0.2.3'
+Follow [this link](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22no.saua.remock%22) to maven central. Choose the
+latest version, and choose a build system.
 
 # Using it
 
@@ -172,7 +173,7 @@ disables the lazy init.
 
 The big difference between Springockito and Remock is whether or not the original implementation lives inside springs
 bean factory. While Springockito will use @Primary on all mocked/spied beans, thus taking precedence over the originals,
-they will still be injected if you @Inject List<...>, or @Inject Map<String, ...>.
+they will still be injected if you `@Inject List<InterfaceOrSuperClass>`, or `@Inject Map<String, InterfaceOrSuperClass>`.
 
 Remock takes a different approach. It takes control over Spring's bean factory and downright rejects adding the
 bean definitions of beans it knows should be mocked or rejected.
