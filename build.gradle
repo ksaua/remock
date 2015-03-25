@@ -75,8 +75,13 @@ task spring3test(type: Test) {
     classpath += sourceSets.main.output
     classpath += sourceSets.test.output
     include "no/saua/remock/Spring3test.class"
+    testLogging.showStandardStreams = true
 }
-test.dependsOn spring3test
+test {
+    testLogging.showStandardStreams = true
+}
+
+check.dependsOn spring3test
 
 artifacts {
     archives javadocJar, sourcesJar
