@@ -1,5 +1,6 @@
 package no.saua.remock.internal;
 
+import no.saua.remock.internal.RemockAnnotationFinder.RemockAnnotations;
 import org.springframework.test.context.MergedContextConfiguration;
 
 import java.util.Objects;
@@ -19,7 +20,7 @@ public class RemockMergedContextConfiguration extends MergedContextConfiguration
 
     public RemockMergedContextConfiguration(MergedContextConfiguration mergedConfig) {
         super(mergedConfig);
-        RemockTestClassAnnotationFinder annotationFinder = new RemockTestClassAnnotationFinder(getTestClass());
+        RemockAnnotations annotationFinder = RemockAnnotationFinder.findFor(getTestClass());
         rejecters = annotationFinder.getRejecters();
         definers = annotationFinder.getDefiners();
         spies = annotationFinder.getSpies();

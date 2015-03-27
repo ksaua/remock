@@ -1,5 +1,6 @@
 package no.saua.remock.internal;
 
+import no.saua.remock.internal.RemockAnnotationFinder.RemockAnnotations;
 import no.saua.remock.internal.SpyDefinition.SpyInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.test.context.ContextConfigurationAttributes;
@@ -54,7 +55,7 @@ public class RemockContextClassLoader extends AnnotationConfigContextLoader {
 
     private void findRemockDefinitionsOnClass(Class<?>... classes) {
         for (Class<?> clazz : classes) {
-            RemockTestClassAnnotationFinder testClassHandler = new RemockTestClassAnnotationFinder(clazz);
+            RemockAnnotations testClassHandler = RemockAnnotationFinder.findFor(clazz);
             rejecters = testClassHandler.getRejecters();
             definers = testClassHandler.getDefiners();
             spyDefinitions = testClassHandler.getSpies();

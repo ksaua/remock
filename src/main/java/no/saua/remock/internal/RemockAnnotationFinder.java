@@ -14,7 +14,7 @@ import java.util.*;
 /**
  * Finds Remock annotations on the test class
  */
-public class RemockTestClassAnnotationFinder extends Entity<RemockTestClassAnnotationFinder> {
+public class RemockAnnotationFinder {
 
     private static Map<Class<? extends Annotation>, AnnotationVisitor> annotationReaders;
 
@@ -26,12 +26,38 @@ public class RemockTestClassAnnotationFinder extends Entity<RemockTestClassAnnot
         annotationReaders.put(ReplaceWithMock.class, new ReplaceWithMockAnnotationVisitor());
     }
 
-    private boolean foundEagerAnnotation = false;
-    private Set<SpringBeanDefiner> definers = new HashSet<>();
-    private Set<SpyDefinition> spies = new HashSet<>();
-    private Set<Rejecter> rejecters = new HashSet<>();
+    public static class RemockAnnotations extends Entity<RemockAnnotations> {
+        private boolean foundEagerAnnotation = false;
+        private Set<SpringBeanDefiner> definers = new HashSet<>();
+        private Set<SpyDefinition> spies = new HashSet<>();
+        private Set<Rejecter> rejecters = new HashSet<>();
 
-    public RemockTestClassAnnotationFinder(Class<?> testClass) {
+        public boolean foundEagerAnnotation() {
+            return foundEagerAnnotation;
+        }
+
+        public Set<Rejecter> getRejecters() {
+            return rejecters;
+        }
+
+        public Set<SpringBeanDefiner> getDefiners() {
+            return definers;
+        }
+
+        public Set<SpyDefinition> getSpies() {
+            return spies;
+        }
+
+        @Override
+        public boolean equals(RemockAnnotations other) {
+            return Objects.equals(foundEagerAnnotation, other.foundEagerAnnotation)
+                    && Objects.equals(definers, other.definers) && Objects.equals(rejecters, other.rejecters)
+                    && Objects.equals(spies, other.spies);
+        }
+    }
+
+    public static RemockAnnotations findFor(Class<?> testClass) {
+        RemockAnnotations result = new RemockAnnotations();
         // :: Find super classes and classes annotated with @RemockContextConfiguration
         List<Class<?>> classes = new LinkedList<>();
         Class<?> currentClass = testClass;
@@ -48,11 +74,12 @@ public class RemockTestClassAnnotationFinder extends Entity<RemockTestClassAnnot
         // :: Go through each potential class, looking for Remock annotations.
         for (Class<?> clazz : classes) {
             if (clazz.getAnnotation(EagerlyInitialized.class) != null) {
-                foundEagerAnnotation = true;
+                result.foundEagerAnnotation = true;
             }
             for (Map.Entry<Class<? extends Annotation>, AnnotationVisitor> entry : annotationReaders.entrySet()) {
                 if (clazz.getAnnotation(entry.getKey()) != null) {
-                    entry.getValue().visitClass(clazz.getAnnotation(entry.getKey()), definers, spies, rejecters);
+                    entry.getValue().visitClass(clazz.getAnnotation(entry.getKey()), result.definers, result.spies,
+                                    result.rejecters);
                 }
             }
 
@@ -60,33 +87,12 @@ public class RemockTestClassAnnotationFinder extends Entity<RemockTestClassAnnot
                 for (Map.Entry<Class<? extends Annotation>, AnnotationVisitor> entry : annotationReaders.entrySet()) {
                     Annotation annotation = field.getAnnotation(entry.getKey());
                     if (annotation != null) {
-                        entry.getValue().visitField(annotation, field, definers, spies, rejecters);
+                        entry.getValue().visitField(annotation, field, result.definers, result.spies, result.rejecters);
                     }
                 }
             }
         }
+        return result;
     }
 
-    public boolean foundEagerAnnotation() {
-        return foundEagerAnnotation;
-    }
-
-    public Set<Rejecter> getRejecters() {
-        return rejecters;
-    }
-
-    public Set<SpringBeanDefiner> getDefiners() {
-        return definers;
-    }
-
-    public Set<SpyDefinition> getSpies() {
-        return spies;
-    }
-
-    @Override
-    public boolean equals(RemockTestClassAnnotationFinder other) {
-        return Objects.equals(foundEagerAnnotation, other.foundEagerAnnotation)
-                        && Objects.equals(definers, other.definers) && Objects.equals(rejecters, other.rejecters)
-                        && Objects.equals(spies, other.spies);
-    }
 }
