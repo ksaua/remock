@@ -56,7 +56,8 @@ public class ContextCacheTest {
         @Test
         public void test() {
             assertNotNull(springContext);
-            assertEquals("Should get the exact same spring context", cachedSpringContextWithRejectAndSpy, springContext);
+            assertTrue("Should get the exact same spring context", cachedSpringContextWithRejectAndSpy ==
+                    springContext);
         }
     }
 

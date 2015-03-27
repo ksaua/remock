@@ -1,6 +1,7 @@
 package no.saua.remock.unittests;
 
 import no.saua.remock.Reject;
+import no.saua.remock.RemockContextConfiguration;
 import no.saua.remock.ReplaceWithMock;
 import no.saua.remock.exampleapplication.AnInterface;
 import no.saua.remock.exampleapplication.SomeService;
@@ -10,6 +11,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 public class RemockAnnotationFinderTest {
 
@@ -45,6 +47,12 @@ public class RemockAnnotationFinderTest {
         public AnInterface test;
     }
 
+    @RemockContextConfiguration(SomeTestClassNotEqual.class)
+    public static class SomeTestClassWithRemockContextConfiguration {
+        @ReplaceWithMock
+        public AnInterface test;
+    }
+
     @Test
     public void testSubClass() {
         RemockAnnotations testClassHandler5 = RemockAnnotationFinder.findFor(SomeSubTestClass.class);
@@ -58,11 +66,20 @@ public class RemockAnnotationFinderTest {
         RemockAnnotations testClassHandler3 = RemockAnnotationFinder.findFor(SomeTestClassNotEqual.class);
         RemockAnnotations testClassHandler4 = RemockAnnotationFinder.findFor(SomeTestClassNotEqual2.class);
         RemockAnnotations testClassHandler5 = RemockAnnotationFinder.findFor(SomeSubTestClass.class);
+        RemockAnnotations testClassHandler6 =
+                        RemockAnnotationFinder.findFor(SomeTestClassWithRemockContextConfiguration.class);
 
         assertEquals(testClassHandler, testClassHandler2);
         assertNotEquals(testClassHandler, testClassHandler3);
         assertNotEquals(testClassHandler, testClassHandler4);
         assertEquals(testClassHandler, testClassHandler5);
+        assertEquals(testClassHandler, testClassHandler6);
+    }
 
+    @Test
+    public void testCache() {
+        RemockAnnotations first = RemockAnnotationFinder.findFor(SomeTestClass.class);
+        RemockAnnotations second = RemockAnnotationFinder.findFor(SomeTestClass.class);
+        assertTrue(first == second);
     }
 }

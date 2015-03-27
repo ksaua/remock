@@ -9,12 +9,15 @@ import no.saua.remock.WrapWithSpy.ReplaceWithSpyAnnotationVisitor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
  * Finds Remock annotations on the test class
  */
 public class RemockAnnotationFinder {
+
+    private static final ConcurrentHashMap<Class<?>, RemockAnnotations> cache = new ConcurrentHashMap<>();
 
     private static Map<Class<? extends Annotation>, AnnotationVisitor> annotationReaders;
 
@@ -54,44 +57,63 @@ public class RemockAnnotationFinder {
                     && Objects.equals(definers, other.definers) && Objects.equals(rejecters, other.rejecters)
                     && Objects.equals(spies, other.spies);
         }
+
+        public RemockAnnotations mergeWith(RemockAnnotations other) {
+            RemockAnnotations result = new RemockAnnotations();
+            result.definers.addAll(definers);
+            result.definers.addAll(other.definers);
+            result.spies.addAll(spies);
+            result.spies.addAll(other.spies);
+            result.rejecters.addAll(rejecters);
+            result.rejecters.addAll(other.rejecters);
+            result.foundEagerAnnotation = foundEagerAnnotation || other.foundEagerAnnotation;
+            return result;
+        }
     }
 
-    public static RemockAnnotations findFor(Class<?> testClass) {
+
+    public static RemockAnnotations findFor(Class<?> clazz) {
+        if (cache.containsKey(clazz)) {
+            return cache.get(clazz);
+        }
+
         RemockAnnotations result = new RemockAnnotations();
-        // :: Find super classes and classes annotated with @RemockContextConfiguration
-        List<Class<?>> classes = new LinkedList<>();
-        Class<?> currentClass = testClass;
-        do {
-            classes.add(currentClass);
-            RemockContextConfiguration annotation = currentClass.getAnnotation(RemockContextConfiguration.class);
-            if (annotation != null) {
-                classes.addAll(Arrays.asList(annotation.value()));
-            }
-            currentClass = currentClass.getSuperclass();
 
-        } while (currentClass != null && !currentClass.equals(Object.class));
-
-        // :: Go through each potential class, looking for Remock annotations.
-        for (Class<?> clazz : classes) {
-            if (clazz.getAnnotation(EagerlyInitialized.class) != null) {
-                result.foundEagerAnnotation = true;
+        // :: Find configuration present on the current class
+        if (clazz.getAnnotation(EagerlyInitialized.class) != null) {
+            result.foundEagerAnnotation = true;
+        }
+        for (Map.Entry<Class<? extends Annotation>, AnnotationVisitor> entry : annotationReaders.entrySet()) {
+            if (clazz.getAnnotation(entry.getKey()) != null) {
+                entry.getValue().visitClass(clazz.getAnnotation(entry.getKey()), result.definers, result.spies,
+                        result.rejecters);
             }
+        }
+
+        for (Field field : clazz.getDeclaredFields()) {
             for (Map.Entry<Class<? extends Annotation>, AnnotationVisitor> entry : annotationReaders.entrySet()) {
-                if (clazz.getAnnotation(entry.getKey()) != null) {
-                    entry.getValue().visitClass(clazz.getAnnotation(entry.getKey()), result.definers, result.spies,
-                                    result.rejecters);
-                }
-            }
-
-            for (Field field : clazz.getDeclaredFields()) {
-                for (Map.Entry<Class<? extends Annotation>, AnnotationVisitor> entry : annotationReaders.entrySet()) {
-                    Annotation annotation = field.getAnnotation(entry.getKey());
-                    if (annotation != null) {
-                        entry.getValue().visitField(annotation, field, result.definers, result.spies, result.rejecters);
-                    }
+                Annotation annotation = field.getAnnotation(entry.getKey());
+                if (annotation != null) {
+                    entry.getValue().visitField(annotation, field, result.definers, result.spies, result.rejecters);
                 }
             }
         }
+
+        // :: Merge with configuration present on the super class
+        if (!clazz.getSuperclass().equals(Object.class)) {
+            result = result.mergeWith(findFor(clazz.getSuperclass()));
+        }
+
+        // :: Merge from all classes found in the RemockContextConfiguration annotation
+        RemockContextConfiguration annotation = clazz.getAnnotation(RemockContextConfiguration.class);
+        if (annotation != null) {
+            for (Class contextClazz: Arrays.asList(annotation.value())) {
+                result = result.mergeWith(findFor(contextClazz));
+            }
+        }
+
+        // Insert into cache and return
+        cache.put(clazz, result);
         return result;
     }
 
