@@ -81,5 +81,9 @@ public class RemockAnnotationFinderTest {
         RemockAnnotations first = RemockAnnotationFinder.findFor(SomeTestClass.class);
         RemockAnnotations second = RemockAnnotationFinder.findFor(SomeTestClass.class);
         assertTrue(first == second);
+
+        RemockAnnotations subFirst = RemockAnnotationFinder.findFor(SomeSubTestClass.class);
+        RemockAnnotations subSecond = RemockAnnotationFinder.findFor(SomeSubTestClass.class);
+        assertTrue(subFirst == subSecond);
     }
 }

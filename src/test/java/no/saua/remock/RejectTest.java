@@ -103,6 +103,25 @@ public class RejectTest {
     }
 
     /**
+     * Reject all of a type except
+     */
+    @Reject(value = AnInterface.class, except = AnInterfaceImplOne.class)
+    @ContextConfiguration(classes = {AnInterfaceImplOne.class, AnInterfaceImplTwo.class})
+    public static class RejectExcept extends CommonTest {
+        @Inject
+        private AnInterfaceImplOne one;
+
+        @Autowired(required = false)
+        private AnInterfaceImplTwo two;
+
+        @Test
+        public void test() {
+            assertThat(one, instanceOf(AnInterfaceImplOne.class));
+            assertNull(two);
+        }
+    }
+
+    /**
      * Reject bean name
      */
     @Reject(beanName = "someService")

@@ -7,6 +7,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Set;
 
 /**
@@ -64,14 +65,20 @@ public @interface Reject {
 
     String beanName() default DEFAULT_BEAN_NAME;
 
+    /**
+     * Reject all classes except for classes of this type.
+     */
+    Class<?>[] except() default {};
+
     public static class RejectAnnotationVisitor implements AnnotationVisitor<Reject> {
         @Override
         public void visitClass(Reject annotation, Set<SpringBeanDefiner> mocks, Set<SpyDefinition> spies,
                         Set<Rejecter> rejecters) {
             Class<?>[] rejectClasses = annotation.value();
+            Class<?>[] exceptClasses = annotation.except();
             if (rejectClasses.length > 0) {
                 for (Class<?> rejectClass : rejectClasses) {
-                    rejecters.add(new RejectBeanClassDefinition(rejectClass));
+                    rejecters.add(new RejectBeanClassDefinition(rejectClass, Arrays.asList(exceptClasses)));
                 }
             } else if (!Reject.DEFAULT_BEAN_NAME.equals(annotation.beanName())) {
                 rejecters.add(new RejectBeanNameDefinition(annotation.beanName()));
