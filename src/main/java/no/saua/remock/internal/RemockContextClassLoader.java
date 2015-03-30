@@ -2,6 +2,7 @@ package no.saua.remock.internal;
 
 import no.saua.remock.internal.RemockAnnotationFinder.RemockAnnotations;
 import no.saua.remock.internal.SpyDefinition.SpyInitializer;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.test.context.ContextConfigurationAttributes;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
@@ -22,11 +23,15 @@ public class RemockContextClassLoader extends AnnotationConfigContextLoader {
         try {
             Field beanFactoryField = GenericApplicationContext.class.getDeclaredField("beanFactory");
             beanFactoryField.setAccessible(true);
-            beanFactory = new RemockBeanFactory(rejecters, foundEagerAnnotation);
+            beanFactory = createBeanFactory();
             beanFactoryField.set(context, beanFactory);
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException("Unable to perform hack", e);
+            throw new RuntimeException("Unable to perform bean factory hack", e);
         }
+    }
+
+    protected RemockBeanFactory createBeanFactory() {
+        return new RemockBeanFactory(rejecters, foundEagerAnnotation);
     }
 
     @Override
