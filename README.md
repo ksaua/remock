@@ -29,7 +29,7 @@ test-class or field with `@Reject`, `@ReplaceWithImpl`, `@ReplaceWithMock` or `@
 
 ## Mocking out a dependency:
 
-The following code will replace `SomeDependency` with a Mockito mock. Since @ReplaceWithMock is a meta-annotation for
+The following code will replace `SomeDependency` with a Mockito mock. Since `@ReplaceWithMock` is a meta-annotation for
  `@Autowired`, it will also automatically be injected into the test. Usage:
 
     @RunWith(SpringJUnit4ClassRunner.class)
@@ -47,7 +47,7 @@ The following code will replace `SomeDependency` with a Mockito mock. Since @Rep
         public void test() {
             when(someDependency.method()).thenReturn(42);
             assertEquals(21, someService.getHalf());
-            assertTrue(isMock(someService));
+            assertTrue(isMock(someDependency));
         }
     }
 
