@@ -1,5 +1,8 @@
 package no.saua.remock.internal;
 
+import java.lang.reflect.Method;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
@@ -7,8 +10,6 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.core.type.MethodMetadata;
 import org.springframework.core.type.StandardMethodMetadata;
-
-import java.util.Set;
 
 public class RemockBeanFactory extends DefaultListableBeanFactory {
 
@@ -35,19 +36,34 @@ public class RemockBeanFactory extends DefaultListableBeanFactory {
                 MethodMetadata factoryMethodMetadata =
                                 ((AnnotatedBeanDefinition) beanDefinition).getFactoryMethodMetadata();
                 if (factoryMethodMetadata instanceof StandardMethodMetadata) {
-                    beanClazz =
-                                    ((StandardMethodMetadata) factoryMethodMetadata).getIntrospectedMethod()
-                                                    .getReturnType();
+                    StandardMethodMetadata methodMetaData = (StandardMethodMetadata) factoryMethodMetadata;
+                    beanClazz = methodMetaData.getIntrospectedMethod().getReturnType();
+                } else {
+                    // Try to find the method directly from the defining class/method
+                    String declaringClassName = factoryMethodMetadata.getDeclaringClassName();
+                    Class<?> factoryClazz = Class.forName(declaringClassName);
+
+                    // Note that MethodMetadata does not give us the exact method, we have to loop through to find
+                    // one which matches the name -- this is not optimal. But it should not matter much, the only thing
+                    // which may trip this up is having to classes with same name but different return values which is
+                    // not something we would expect in (sane) @Configuration classes.
+                    for (Method m: factoryClazz.getDeclaredMethods()) {
+                        if (factoryMethodMetadata.getMethodName().equals(m.getName())) {
+                            beanClazz = m.getReturnType();
+                        }
+                    }
                 }
             }
-
 
             if (beanClassName != null) {
                 beanClazz = Class.forName(beanClassName);
             }
-            if (isBeanRejected(beanName, beanClazz)) {
+            if (beanClazz != null && isBeanRejected(beanName, beanClazz)) {
                 log.info("Rejected bean [{}] with definiton [{}]", beanName, beanDefinition);
             } else {
+                if (beanClazz == null) {
+                    log.warn("Unable to find beanclass for bean [{}] with definition [{}]", beanName, beanDefinition);
+                }
                 if (!foundEagerAnnotation) {
                     beanDefinition.setLazyInit(true);
                 }
