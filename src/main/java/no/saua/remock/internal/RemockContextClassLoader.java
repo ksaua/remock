@@ -10,6 +10,15 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import java.lang.reflect.Field;
 import java.util.Set;
 
+/**
+ * This is Remocks core class. It:
+ * <ul>
+ * <li>Hooks into the spring-test-lifecycle and starts looking for Remock annotation.</li>
+ * <li>Replaces Spring's beanFactory with a {@link RemockBeanFactory}.</li>
+ * <li>Registers mocked beans.</li>
+ * <li>Registers a {@link SpyInitializer}.</li>
+ * </ul>
+ */
 public class RemockContextClassLoader extends AnnotationConfigContextLoader {
 
     private Set<Rejecter> rejecters;

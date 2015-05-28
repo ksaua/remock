@@ -1,5 +1,8 @@
+# 0.4.0
+* Stopped supporting Java 7 (due to future usage of @Repeatable annotations).
+
 # 0.3.1
-Fixed nullpointer issue with certain factory beans.
+* Fixed nullpointer issue with certain factory beans.
 
 # 0.3.0
 * Tests with lazily initialized contexts will no longer use cached eager initialized contexts (and vice versa).
