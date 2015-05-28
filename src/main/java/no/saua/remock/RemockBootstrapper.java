@@ -22,7 +22,7 @@ public class RemockBootstrapper extends AbstractTestContextBootstrapper {
     private static final Logger log = LoggerFactory.getLogger(RemockBeanFactory.class);
 
     @Override
-    protected Class<? extends ContextLoader> getDefaultContextLoaderClass(Class<?> testClass) {
+    protected Class<? extends RemockContextClassLoader> getDefaultContextLoaderClass(Class<?> testClass) {
         return RemockContextClassLoader.class;
     }
 
