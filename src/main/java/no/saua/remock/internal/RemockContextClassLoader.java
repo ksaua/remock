@@ -2,7 +2,6 @@ package no.saua.remock.internal;
 
 import no.saua.remock.internal.RemockAnnotationFinder.RemockAnnotations;
 import no.saua.remock.internal.SpyDefinition.SpyInitializer;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.test.context.ContextConfigurationAttributes;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
@@ -52,14 +51,6 @@ public class RemockContextClassLoader extends AnnotationConfigContextLoader {
 
         beanFactory.registerSingleton("$RemockSpyInitializer$", new SpyInitializer(spyDefinitions));
     }
-
-    @Override
-    protected Class<?>[] detectDefaultConfigurationClasses(Class<?> declaringClass) {
-        Class<?>[] classes = super.detectDefaultConfigurationClasses(declaringClass);
-        findRemockDefinitionsOnClass(classes);
-        return classes;
-    }
-
 
     @Override
     public void processContextConfiguration(ContextConfigurationAttributes configAttributes) {
