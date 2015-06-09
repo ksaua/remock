@@ -1,8 +1,6 @@
 package no.saua.remock;
 
-import no.saua.remock.exampleapplication.AnInterface;
-import no.saua.remock.exampleapplication.AnInterfaceImplOne;
-import no.saua.remock.exampleapplication.AnInterfaceImplTwo;
+import no.saua.remock.exampleapplication.*;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
@@ -12,6 +10,8 @@ import org.springframework.test.context.ContextConfiguration;
 import javax.inject.Inject;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * Tests the {@link no.saua.remock.ReplaceWithImpl} annotation.
@@ -55,6 +55,31 @@ public class ReplaceWithImplTest {
         @Test
         public void test() {
             assertEquals(AnInterfaceImplTwo.class, anInterface.getClass());
+        }
+    }
+
+    /**
+     * Test repeated annotation on a class.
+     */
+    @ReplaceWithImpl(value = AnInterfaceImplOne.class, with= AnInterfaceImplTwo.class)
+    @ReplaceWithImpl(value = SomeServiceWithDependencies.class, with=SomeService.class)
+    @ContextConfiguration(classes = {AnInterfaceImplOne.class, SomeServiceWithDependencies.class})
+    public static class RepeatedReplaceWithImplAnnotationsTest extends CommonTest {
+
+        @Inject
+        private AnInterface anInterface;
+
+        @Inject
+        private SomeService someService;
+
+        @Autowired(required = false)
+        private SomeServiceWithDependencies someServiceWithDependencies;
+
+        @Test
+        public void test() {
+            assertEquals(AnInterfaceImplTwo.class, anInterface.getClass());
+            assertNotNull(someService);
+            assertNull(someServiceWithDependencies);
         }
     }
 }

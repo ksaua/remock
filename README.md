@@ -51,7 +51,7 @@ The following code will replace `SomeDependency` with a Mockito mock. Since `@Re
         }
     }
 
-`@ReplaceWithMock` can also be annotated directly test-class.
+`@ReplaceWithMock` can also be annotated directly test-class where it is repeatable.
 
 ## Spying on a dependency:
 
@@ -77,7 +77,7 @@ meta-annotation for `@Autowired`, it will also automatically be injected into th
     }
 
 
-`@WrapWithSpy` can also be annotated directly on the test-class.
+`@WrapWithSpy` can also be annotated directly on the test-class where it is repeatable. 
 
 ## Replacing a bean with a non-mockito mock
 
@@ -98,7 +98,7 @@ bean will be auto injected. Usage:
         }
     }
 
-`@ReplaceWithImpl` can also be annotated directly on the test-class.
+`@ReplaceWithImpl` can also be annotated directly on the test-class where it is repeatable.
 
 ## Rejecting a dependency:
 
@@ -122,7 +122,7 @@ This is a bit out of the ordinary, but it's quite powerful. This is particularly
 
 Another use-case is for controlling which beans are defined and lifecycled when a `@ComponentScan` is used.
 
-`@Reject` can also be annotated directly on the test-class.
+`@Reject` can also be used for a field, though a reason why you would do this alludes me. `@Reject` is repeatable.
 
 ## Grouping common mocks
 

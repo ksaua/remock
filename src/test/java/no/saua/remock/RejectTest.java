@@ -109,7 +109,7 @@ public class RejectTest {
     @ContextConfiguration(classes = {AnInterfaceImplOne.class, AnInterfaceImplTwo.class})
     public static class RejectExcept extends CommonTest {
         @Inject
-        private AnInterfaceImplOne one;
+        private AnInterface one;
 
         @Autowired(required = false)
         private AnInterfaceImplTwo two;
@@ -134,6 +134,26 @@ public class RejectTest {
         @Test
         public void test() {
             assertNull("bean should not have been injected", someService);
+        }
+    }
+
+    /**
+     * Reject multiple
+     */
+    @Reject(AnInterfaceImplOne.class)
+    @Reject(beanName = "someService")
+    @ContextConfiguration(classes = {ConfigurationClass.class, AnInterfaceImplOne.class, AnInterfaceImplTwo.class})
+    public static class RejectRepeated extends CommonTest {
+        @Inject
+        private AnInterface two;
+
+        @Autowired(required = false)
+        private SomeService someService;
+
+        @Test
+        public void test() {
+            assertThat(two, instanceOf(AnInterfaceImplTwo.class));
+            assertNull("should have been rejected", someService);
         }
     }
 }

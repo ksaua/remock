@@ -6,10 +6,7 @@ import no.saua.remock.internal.SpringBeanDefiner;
 import no.saua.remock.internal.SpyDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 import java.lang.reflect.Field;
 import java.util.Set;
 
@@ -42,10 +39,17 @@ import java.util.Set;
 @Autowired
 @Target({ElementType.TYPE, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
+@Repeatable(WrapWithSpy.WrapWithSpies.class)
 public @interface WrapWithSpy {
     Class<?>[] value() default {};
 
     String[] beanNames() default {};
+
+    @Target(ElementType.TYPE)
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface WrapWithSpies {
+        WrapWithSpy[] value();
+    }
 
     public static class ReplaceWithSpyAnnotationVisitor implements AnnotationVisitor<WrapWithSpy> {
 

@@ -84,9 +84,8 @@ public class RemockAnnotationFinder {
             result.foundEagerAnnotation = true;
         }
         for (Map.Entry<Class<? extends Annotation>, AnnotationVisitor> entry : annotationReaders.entrySet()) {
-            if (clazz.getAnnotation(entry.getKey()) != null) {
-                entry.getValue().visitClass(clazz.getAnnotation(entry.getKey()), result.definers, result.spies,
-                        result.rejecters);
+            for (Annotation annot: clazz.getAnnotationsByType(entry.getKey())) {
+                entry.getValue().visitClass(annot, result.definers, result.spies, result.rejecters);
             }
         }
 

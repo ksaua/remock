@@ -2,10 +2,7 @@ package no.saua.remock;
 
 import no.saua.remock.internal.*;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Set;
@@ -58,7 +55,9 @@ import java.util.Set;
  */
 @Target({ElementType.FIELD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
+@Repeatable(Reject.Rejects.class)
 public @interface Reject {
+
     public static final String DEFAULT_BEAN_NAME = "^$$DEFAULT$$^";
 
     Class<?>[] value() default {};
@@ -69,6 +68,12 @@ public @interface Reject {
      * Reject all classes except for classes of this type.
      */
     Class<?>[] except() default {};
+
+    @Target(ElementType.TYPE)
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface Rejects {
+        Reject[] value();
+    }
 
     public static class RejectAnnotationVisitor implements AnnotationVisitor<Reject> {
         @Override

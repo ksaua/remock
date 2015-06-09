@@ -3,10 +3,7 @@ package no.saua.remock;
 import no.saua.remock.internal.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 import java.lang.reflect.Field;
 import java.util.Set;
 
@@ -36,15 +33,22 @@ import java.util.Set;
 @Autowired
 @Target({ElementType.TYPE, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
+@Repeatable(ReplaceWithImpl.ReplaceWithImpls.class)
 public @interface ReplaceWithImpl {
 
-    public Class<?> value();
+    Class<?> value();
 
-    public Class<?> with();
+    Class<?> with();
 
-    public String beanName() default DEFAULT_BEAN_NAME;
+    String beanName() default DEFAULT_BEAN_NAME;
 
-    static final String DEFAULT_BEAN_NAME = "::DEFAULT::";
+    public static final String DEFAULT_BEAN_NAME = "::DEFAULT::";
+
+    @Target(ElementType.TYPE)
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface ReplaceWithImpls {
+        ReplaceWithImpl[] value();
+    }
 
     public static class ReplaceWithImplAnnotationVisitor implements AnnotationVisitor<ReplaceWithImpl> {
 

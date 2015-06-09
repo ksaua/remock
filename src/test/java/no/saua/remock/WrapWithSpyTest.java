@@ -16,7 +16,7 @@ import static org.junit.Assert.assertTrue;
 public class WrapWithSpyTest {
 
     /**
-     * Replaces all implementations of AnInterface with spies.
+     * Wraps all implementations of AnInterface with spies.
      */
     @WrapWithSpy(AnInterface.class)
     @ContextConfiguration(classes = {AnInterfaceImplOne.class, AnInterfaceImplTwo.class})
@@ -36,7 +36,7 @@ public class WrapWithSpyTest {
     }
 
     /**
-     * Replaces the given classes with spies.
+     * Wraps the given classes with spies.
      */
     @WrapWithSpy({AnInterfaceImplOne.class, AnInterfaceImplTwo.class})
     @ContextConfiguration(classes = {AnInterfaceImplOne.class, AnInterfaceImplTwo.class})
@@ -56,7 +56,7 @@ public class WrapWithSpyTest {
     }
 
     /**
-     * Replaces the annotated fields with spies.
+     * Wraps the annotated fields with spies.
      */
     @ContextConfiguration(classes = {AnInterfaceImplOne.class, AnInterfaceImplTwo.class})
     public static class SpyFields extends CommonTest {
@@ -75,11 +75,33 @@ public class WrapWithSpyTest {
     }
 
     /**
-     * Replaces the given bean names with spies.
+     * Wraps the given bean names with spies.
      */
     @WrapWithSpy(beanNames = {"anInterfaceImplOne", "anInterfaceImplTwo"})
     @ContextConfiguration(classes = {AnInterfaceImplOne.class, AnInterfaceImplTwo.class})
     public static class SpyAllOfMultipleNamed extends CommonTest {
+
+        @Inject
+        private AnInterfaceImplOne one;
+
+        @Inject
+        private AnInterfaceImplTwo two;
+
+        @Test
+        public void test() {
+            assertTrue(isSpy(one));
+            assertTrue(isSpy(two));
+        }
+    }
+
+
+    /**
+     * Wraps multiple beans with spies.
+     */
+    @WrapWithSpy(AnInterfaceImplOne.class)
+    @WrapWithSpy(beanNames = "anInterfaceImplTwo")
+    @ContextConfiguration(classes = {AnInterfaceImplOne.class, AnInterfaceImplTwo.class})
+    public static class SpyRepeatedAnnotation extends CommonTest {
 
         @Inject
         private AnInterfaceImplOne one;

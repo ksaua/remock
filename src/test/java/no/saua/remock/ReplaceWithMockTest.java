@@ -2,6 +2,7 @@ package no.saua.remock;
 
 import no.saua.remock.exampleapplication.ConfigurationClass;
 import no.saua.remock.exampleapplication.SomeService;
+import no.saua.remock.exampleapplication.SomeServiceWithDependencies;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
@@ -39,6 +40,24 @@ public class ReplaceWithMockTest {
         public void test() {
             assertFalse(someService.getClass().equals(SomeService.class));
             assertTrue(isMock(someService));
+        }
+    }
+
+    @ReplaceWithMock(SomeService.class)
+    @ReplaceWithMock(SomeServiceWithDependencies.class)
+    @ContextConfiguration(classes = {SomeService.class, SomeServiceWithDependencies.class})
+    public static class ReplaceWithMockRepeatedAnnotationTest extends CommonTest {
+
+        @Inject
+        public SomeService someService;
+
+        @Inject
+        public SomeServiceWithDependencies someServiceWithDependencies;
+
+        @Test
+        public void test() {
+            assertTrue(isMock(someService));
+            assertTrue(isMock(someServiceWithDependencies));
         }
     }
 
