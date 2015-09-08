@@ -168,6 +168,7 @@ disables the lazy init.
         }
     }
 
+If you do not want everything to be eagerly initialized, you can specify which beans you want to disable lazy init for.
 
 # Difference between Springockito and Remock
 

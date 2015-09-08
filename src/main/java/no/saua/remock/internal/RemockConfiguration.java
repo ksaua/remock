@@ -29,13 +29,15 @@ public class RemockConfiguration extends Entity<RemockConfiguration> {
         annotationReaders.put(ReplaceWithMock.class, new ReplaceWithMockAnnotationVisitor());
     }
 
-    private boolean foundDisableLazyInitAnnotation = false;
+    private boolean disableLazyInit = false;
     private Set<SpringBeanDefiner> definers = new HashSet<>();
     private Set<SpyDefinition> spies = new HashSet<>();
     private Set<Rejecter> rejecters = new HashSet<>();
+    private Set<String> eagerBeanNames = new HashSet<>();
+    private Set<Class<?>> eagerBeanClasses = new HashSet<>();
 
-    public boolean foundDisableLazyInitAnnotation() {
-        return foundDisableLazyInitAnnotation;
+    public boolean disableLazyInit() {
+        return disableLazyInit;
     }
 
     public Set<Rejecter> getRejecters() {
@@ -50,16 +52,27 @@ public class RemockConfiguration extends Entity<RemockConfiguration> {
         return spies;
     }
 
+    public Set<String> getEagerBeanNames() {
+        return eagerBeanNames;
+    }
+
+    public Set<Class<?>> getEagerBeanClasses() {
+        return eagerBeanClasses;
+    }
+
     @Override
     public boolean equals(RemockConfiguration other) {
-        return Objects.equals(foundDisableLazyInitAnnotation, other.foundDisableLazyInitAnnotation)
-                && Objects.equals(definers, other.definers) && Objects.equals(rejecters, other.rejecters)
-                && Objects.equals(spies, other.spies);
+        return Objects.equals(disableLazyInit, other.disableLazyInit)
+                && Objects.equals(definers, other.definers)
+                && Objects.equals(rejecters, other.rejecters)
+                && Objects.equals(spies, other.spies)
+                && Objects.equals(eagerBeanNames, other.eagerBeanNames)
+                && Objects.equals(eagerBeanClasses, other.eagerBeanClasses);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(rejecters, definers, spies, foundDisableLazyInitAnnotation);
+        return Objects.hash(rejecters, definers, spies, disableLazyInit, eagerBeanNames, eagerBeanClasses);
     }
 
     public RemockConfiguration mergeWith(RemockConfiguration other) {
@@ -70,7 +83,11 @@ public class RemockConfiguration extends Entity<RemockConfiguration> {
         result.spies.addAll(other.spies);
         result.rejecters.addAll(rejecters);
         result.rejecters.addAll(other.rejecters);
-        result.foundDisableLazyInitAnnotation = foundDisableLazyInitAnnotation || other.foundDisableLazyInitAnnotation;
+        result.disableLazyInit = disableLazyInit || other.disableLazyInit;
+        result.eagerBeanClasses.addAll(eagerBeanClasses);
+        result.eagerBeanClasses.addAll(other.eagerBeanClasses);
+        result.eagerBeanNames.addAll(eagerBeanNames);
+        result.eagerBeanNames.addAll(other.eagerBeanNames);
         return result;
     }
 
@@ -83,8 +100,14 @@ public class RemockConfiguration extends Entity<RemockConfiguration> {
         RemockConfiguration result = new RemockConfiguration();
 
         // :: Find configuration present on the current class
-        if (clazz.getAnnotation(DisableLazyInit.class) != null) {
-            result.foundDisableLazyInitAnnotation = true;
+        DisableLazyInit disableLazyInit = clazz.getAnnotation(DisableLazyInit.class);
+        if (disableLazyInit != null) {
+             if (disableLazyInit.value().length != 0 || disableLazyInit.beanName().length != 0) {
+                 result.eagerBeanClasses = new HashSet<>(Arrays.asList(disableLazyInit.value()));
+                 result.eagerBeanNames = new HashSet<>(Arrays.asList(disableLazyInit.beanName()));
+             } else {
+                result.disableLazyInit = true;
+             }
         }
         for (Map.Entry<Class<? extends Annotation>, AnnotationVisitor> entry : annotationReaders.entrySet()) {
             for (Annotation annot: clazz.getAnnotationsByType(entry.getKey())) {

@@ -1,7 +1,7 @@
 package no.saua.remock.internal;
 
 import java.lang.reflect.Method;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +61,10 @@ public class RemockBeanFactory extends DefaultListableBeanFactory {
                 if (beanClazz == null) {
                     log.warn("Unable to find beanclass for bean [{}] with definition [{}]", beanName, beanDefinition);
                 }
-                if (!remockConfig.foundDisableLazyInitAnnotation()) {
+                if (remockConfig.getEagerBeanClasses().contains(beanClazz)
+                        || remockConfig.getEagerBeanNames().contains(beanName)) {
+                    beanDefinition.setLazyInit(false);
+                } else if (!remockConfig.disableLazyInit()) {
                     beanDefinition.setLazyInit(true);
                 }
                 super.registerBeanDefinition(beanName, beanDefinition);
