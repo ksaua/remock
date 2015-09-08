@@ -15,13 +15,10 @@ public class RemockBeanFactory extends DefaultListableBeanFactory {
 
     private final static Logger log = LoggerFactory.getLogger(RemockBeanFactory.class);
 
-    private Set<Rejecter> rejecters;
+    private RemockConfiguration remockConfig;
 
-    private boolean disableLazyInit = false;
-
-    public RemockBeanFactory(Set<Rejecter> rejecters, boolean disableLazyInit) {
-        this.rejecters = rejecters;
-        this.disableLazyInit = disableLazyInit;
+    public RemockBeanFactory(RemockConfiguration remockConfig) {
+        this.remockConfig = remockConfig;
     }
 
     @Override
@@ -64,7 +61,7 @@ public class RemockBeanFactory extends DefaultListableBeanFactory {
                 if (beanClazz == null) {
                     log.warn("Unable to find beanclass for bean [{}] with definition [{}]", beanName, beanDefinition);
                 }
-                if (!disableLazyInit) {
+                if (!remockConfig.foundDisableLazyInitAnnotation()) {
                     beanDefinition.setLazyInit(true);
                 }
                 super.registerBeanDefinition(beanName, beanDefinition);
@@ -89,7 +86,7 @@ public class RemockBeanFactory extends DefaultListableBeanFactory {
     }
 
     private boolean isBeanRejected(String beanName, Class<?> beanClazz) {
-        for (Rejecter rejecter : rejecters) {
+        for (Rejecter rejecter : remockConfig.getRejecters()) {
             if (rejecter.shouldReject(beanName, beanClazz)) {
                 return true;
             }

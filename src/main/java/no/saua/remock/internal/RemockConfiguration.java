@@ -13,9 +13,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
- * Finds Remock annotations on the test class, creates a {@link no.saua.remock.internal.RemockAnnotationFinder.RemockConfiguration}.
+ * Finds Remock annotations on the test class, creates a {@link no.saua.remock.internal.RemockConfiguration}.
  */
-public class RemockAnnotationFinder {
+public class RemockConfiguration extends Entity<RemockConfiguration> {
 
     private static final ConcurrentHashMap<Class<?>, RemockConfiguration> cache = new ConcurrentHashMap<>();
 
@@ -29,51 +29,49 @@ public class RemockAnnotationFinder {
         annotationReaders.put(ReplaceWithMock.class, new ReplaceWithMockAnnotationVisitor());
     }
 
-    public static class RemockConfiguration extends Entity<RemockConfiguration> {
-        private boolean foundDisableLazyInitAnnotation = false;
-        private Set<SpringBeanDefiner> definers = new HashSet<>();
-        private Set<SpyDefinition> spies = new HashSet<>();
-        private Set<Rejecter> rejecters = new HashSet<>();
+    private boolean foundDisableLazyInitAnnotation = false;
+    private Set<SpringBeanDefiner> definers = new HashSet<>();
+    private Set<SpyDefinition> spies = new HashSet<>();
+    private Set<Rejecter> rejecters = new HashSet<>();
 
-        public boolean foundDisableLazyInitAnnotation() {
-            return foundDisableLazyInitAnnotation;
-        }
+    public boolean foundDisableLazyInitAnnotation() {
+        return foundDisableLazyInitAnnotation;
+    }
 
-        public Set<Rejecter> getRejecters() {
-            return rejecters;
-        }
+    public Set<Rejecter> getRejecters() {
+        return rejecters;
+    }
 
-        public Set<SpringBeanDefiner> getDefiners() {
-            return definers;
-        }
+    public Set<SpringBeanDefiner> getDefiners() {
+        return definers;
+    }
 
-        public Set<SpyDefinition> getSpies() {
-            return spies;
-        }
+    public Set<SpyDefinition> getSpies() {
+        return spies;
+    }
 
-        @Override
-        public boolean equals(RemockConfiguration other) {
-            return Objects.equals(foundDisableLazyInitAnnotation, other.foundDisableLazyInitAnnotation)
-                    && Objects.equals(definers, other.definers) && Objects.equals(rejecters, other.rejecters)
-                    && Objects.equals(spies, other.spies);
-        }
+    @Override
+    public boolean equals(RemockConfiguration other) {
+        return Objects.equals(foundDisableLazyInitAnnotation, other.foundDisableLazyInitAnnotation)
+                && Objects.equals(definers, other.definers) && Objects.equals(rejecters, other.rejecters)
+                && Objects.equals(spies, other.spies);
+    }
 
-        @Override
-        public int hashCode() {
-            return Objects.hash(rejecters, definers, spies, foundDisableLazyInitAnnotation);
-        }
+    @Override
+    public int hashCode() {
+        return Objects.hash(rejecters, definers, spies, foundDisableLazyInitAnnotation);
+    }
 
-        public RemockConfiguration mergeWith(RemockConfiguration other) {
-            RemockConfiguration result = new RemockConfiguration();
-            result.definers.addAll(definers);
-            result.definers.addAll(other.definers);
-            result.spies.addAll(spies);
-            result.spies.addAll(other.spies);
-            result.rejecters.addAll(rejecters);
-            result.rejecters.addAll(other.rejecters);
-            result.foundDisableLazyInitAnnotation = foundDisableLazyInitAnnotation || other.foundDisableLazyInitAnnotation;
-            return result;
-        }
+    public RemockConfiguration mergeWith(RemockConfiguration other) {
+        RemockConfiguration result = new RemockConfiguration();
+        result.definers.addAll(definers);
+        result.definers.addAll(other.definers);
+        result.spies.addAll(spies);
+        result.spies.addAll(other.spies);
+        result.rejecters.addAll(rejecters);
+        result.rejecters.addAll(other.rejecters);
+        result.foundDisableLazyInitAnnotation = foundDisableLazyInitAnnotation || other.foundDisableLazyInitAnnotation;
+        return result;
     }
 
 

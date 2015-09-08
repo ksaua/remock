@@ -1,6 +1,5 @@
 package no.saua.remock.internal;
 
-import no.saua.remock.internal.RemockAnnotationFinder.RemockConfiguration;
 import org.springframework.test.context.MergedContextConfiguration;
 
 /**
@@ -14,7 +13,7 @@ public class RemockMergedContextConfiguration extends MergedContextConfiguration
 
     public RemockMergedContextConfiguration(MergedContextConfiguration mergedConfig) {
         super(mergedConfig);
-        annotations = RemockAnnotationFinder.findFor(getTestClass());
+        annotations = RemockConfiguration.findFor(getTestClass());
     }
 
     public RemockConfiguration getAnnotations() {
