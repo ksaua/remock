@@ -13,11 +13,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
- * Finds Remock annotations on the test class
+ * Finds Remock annotations on the test class, creates a {@link no.saua.remock.internal.RemockAnnotationFinder.RemockConfiguration}.
  */
 public class RemockAnnotationFinder {
 
-    private static final ConcurrentHashMap<Class<?>, RemockAnnotations> cache = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Class<?>, RemockConfiguration> cache = new ConcurrentHashMap<>();
 
     private static Map<Class<? extends Annotation>, AnnotationVisitor> annotationReaders;
 
@@ -29,7 +29,7 @@ public class RemockAnnotationFinder {
         annotationReaders.put(ReplaceWithMock.class, new ReplaceWithMockAnnotationVisitor());
     }
 
-    public static class RemockAnnotations extends Entity<RemockAnnotations> {
+    public static class RemockConfiguration extends Entity<RemockConfiguration> {
         private boolean foundEagerAnnotation = false;
         private Set<SpringBeanDefiner> definers = new HashSet<>();
         private Set<SpyDefinition> spies = new HashSet<>();
@@ -52,7 +52,7 @@ public class RemockAnnotationFinder {
         }
 
         @Override
-        public boolean equals(RemockAnnotations other) {
+        public boolean equals(RemockConfiguration other) {
             return Objects.equals(foundEagerAnnotation, other.foundEagerAnnotation)
                     && Objects.equals(definers, other.definers) && Objects.equals(rejecters, other.rejecters)
                     && Objects.equals(spies, other.spies);
@@ -63,8 +63,8 @@ public class RemockAnnotationFinder {
             return Objects.hash(rejecters, definers, spies, foundEagerAnnotation);
         }
 
-        public RemockAnnotations mergeWith(RemockAnnotations other) {
-            RemockAnnotations result = new RemockAnnotations();
+        public RemockConfiguration mergeWith(RemockConfiguration other) {
+            RemockConfiguration result = new RemockConfiguration();
             result.definers.addAll(definers);
             result.definers.addAll(other.definers);
             result.spies.addAll(spies);
@@ -77,12 +77,12 @@ public class RemockAnnotationFinder {
     }
 
 
-    public static RemockAnnotations findFor(Class<?> clazz) {
+    public static RemockConfiguration findFor(Class<?> clazz) {
         if (cache.containsKey(clazz)) {
             return cache.get(clazz);
         }
 
-        RemockAnnotations result = new RemockAnnotations();
+        RemockConfiguration result = new RemockConfiguration();
 
         // :: Find configuration present on the current class
         if (clazz.getAnnotation(EagerlyInitialized.class) != null) {

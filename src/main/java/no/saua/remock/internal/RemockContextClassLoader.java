@@ -26,7 +26,7 @@ public class RemockContextClassLoader extends AnnotationConfigContextLoader {
             throw new AssertionError("MergedContextConfiguration is not a RemockMergedContextConfiguration. This should not happen.");
         }
 
-        RemockAnnotationFinder.RemockAnnotations remockConfig = ((RemockMergedContextConfiguration) mergedConfig).getAnnotations();
+        RemockAnnotationFinder.RemockConfiguration remockConfig = ((RemockMergedContextConfiguration) mergedConfig).getAnnotations();
         try {
             Field beanFactoryField = GenericApplicationContext.class.getDeclaredField("beanFactory");
             beanFactoryField.setAccessible(true);
@@ -37,7 +37,7 @@ public class RemockContextClassLoader extends AnnotationConfigContextLoader {
         }
     }
 
-    protected RemockBeanFactory createBeanFactory(RemockAnnotationFinder.RemockAnnotations remockConfig) {
+    protected RemockBeanFactory createBeanFactory(RemockAnnotationFinder.RemockConfiguration remockConfig) {
         RemockBeanFactory remockBeanFactory = new RemockBeanFactory(remockConfig.getRejecters(), remockConfig.foundEagerAnnotation());
 
         // :: Initialize mock definitions

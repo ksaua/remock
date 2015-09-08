@@ -1,10 +1,7 @@
 package no.saua.remock.internal;
 
-import no.saua.remock.internal.RemockAnnotationFinder.RemockAnnotations;
+import no.saua.remock.internal.RemockAnnotationFinder.RemockConfiguration;
 import org.springframework.test.context.MergedContextConfiguration;
-
-import java.util.Objects;
-import java.util.Set;
 
 /**
  * To get Springs context caching mechanism working we extend the MergedContextConfiguration and
@@ -13,14 +10,14 @@ import java.util.Set;
  */
 public class RemockMergedContextConfiguration extends MergedContextConfiguration {
 
-    private final RemockAnnotations annotations;
+    private final RemockConfiguration annotations;
 
     public RemockMergedContextConfiguration(MergedContextConfiguration mergedConfig) {
         super(mergedConfig);
         annotations = RemockAnnotationFinder.findFor(getTestClass());
     }
 
-    public RemockAnnotations getAnnotations() {
+    public RemockConfiguration getAnnotations() {
         return annotations;
     }
 

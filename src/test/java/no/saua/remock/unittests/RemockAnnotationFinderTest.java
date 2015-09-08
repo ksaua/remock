@@ -6,7 +6,7 @@ import no.saua.remock.ReplaceWithMock;
 import no.saua.remock.exampleapplication.AnInterface;
 import no.saua.remock.exampleapplication.SomeService;
 import no.saua.remock.internal.RemockAnnotationFinder;
-import no.saua.remock.internal.RemockAnnotationFinder.RemockAnnotations;
+import no.saua.remock.internal.RemockAnnotationFinder.RemockConfiguration;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -23,7 +23,7 @@ public class RemockAnnotationFinderTest {
 
     @Test
     public void test() {
-        RemockAnnotations testClassHandler = RemockAnnotationFinder.findFor(SomeTestClass.class);
+        RemockConfiguration testClassHandler = RemockAnnotationFinder.findFor(SomeTestClass.class);
         assertEquals(2, testClassHandler.getRejecters().size());
     }
 
@@ -55,18 +55,18 @@ public class RemockAnnotationFinderTest {
 
     @Test
     public void testSubClass() {
-        RemockAnnotations testClassHandler5 = RemockAnnotationFinder.findFor(SomeSubTestClass.class);
+        RemockConfiguration testClassHandler5 = RemockAnnotationFinder.findFor(SomeSubTestClass.class);
         assertEquals(2, testClassHandler5.getRejecters().size());
     }
 
     @Test
     public void testEquality() {
-        RemockAnnotations testClassHandler = RemockAnnotationFinder.findFor(SomeTestClass.class);
-        RemockAnnotations testClassHandler2 = RemockAnnotationFinder.findFor(SomeEqualTestClass.class);
-        RemockAnnotations testClassHandler3 = RemockAnnotationFinder.findFor(SomeTestClassNotEqual.class);
-        RemockAnnotations testClassHandler4 = RemockAnnotationFinder.findFor(SomeTestClassNotEqual2.class);
-        RemockAnnotations testClassHandler5 = RemockAnnotationFinder.findFor(SomeSubTestClass.class);
-        RemockAnnotations testClassHandler6 =
+        RemockConfiguration testClassHandler = RemockAnnotationFinder.findFor(SomeTestClass.class);
+        RemockConfiguration testClassHandler2 = RemockAnnotationFinder.findFor(SomeEqualTestClass.class);
+        RemockConfiguration testClassHandler3 = RemockAnnotationFinder.findFor(SomeTestClassNotEqual.class);
+        RemockConfiguration testClassHandler4 = RemockAnnotationFinder.findFor(SomeTestClassNotEqual2.class);
+        RemockConfiguration testClassHandler5 = RemockAnnotationFinder.findFor(SomeSubTestClass.class);
+        RemockConfiguration testClassHandler6 =
                         RemockAnnotationFinder.findFor(SomeTestClassWithRemockContextConfiguration.class);
 
         assertEquals(testClassHandler, testClassHandler2);
@@ -78,12 +78,12 @@ public class RemockAnnotationFinderTest {
 
     @Test
     public void testCache() {
-        RemockAnnotations first = RemockAnnotationFinder.findFor(SomeTestClass.class);
-        RemockAnnotations second = RemockAnnotationFinder.findFor(SomeTestClass.class);
+        RemockConfiguration first = RemockAnnotationFinder.findFor(SomeTestClass.class);
+        RemockConfiguration second = RemockAnnotationFinder.findFor(SomeTestClass.class);
         assertTrue(first == second);
 
-        RemockAnnotations subFirst = RemockAnnotationFinder.findFor(SomeSubTestClass.class);
-        RemockAnnotations subSecond = RemockAnnotationFinder.findFor(SomeSubTestClass.class);
+        RemockConfiguration subFirst = RemockAnnotationFinder.findFor(SomeSubTestClass.class);
+        RemockConfiguration subSecond = RemockAnnotationFinder.findFor(SomeSubTestClass.class);
         assertTrue(subFirst == subSecond);
     }
 }
