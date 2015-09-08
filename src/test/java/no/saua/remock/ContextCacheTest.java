@@ -1,9 +1,10 @@
 package no.saua.remock;
 
-import static org.junit.Assert.*;
-
-import javax.inject.Inject;
-
+import no.saua.remock.ContextCacheTest.*;
+import no.saua.remock.exampleapplication.AnInterface;
+import no.saua.remock.exampleapplication.AnInterfaceImplTwo;
+import no.saua.remock.exampleapplication.SomeService;
+import no.saua.remock.exampleapplication.SomeServiceWithDependencies;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -11,23 +12,18 @@ import org.junit.runners.Suite.SuiteClasses;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 
-import no.saua.remock.ContextCacheTest.SomeTestClass;
-import no.saua.remock.ContextCacheTest.SomeTestClassEqual;
-import no.saua.remock.ContextCacheTest.SomeTestClassNotEqual0;
-import no.saua.remock.ContextCacheTest.SomeTestClassNotEqual1;
-import no.saua.remock.ContextCacheTest.SomeTestClassNotEqual2;
-import no.saua.remock.ContextCacheTest.SomeTestClassNotEqual3;
-import no.saua.remock.exampleapplication.AnInterface;
-import no.saua.remock.exampleapplication.AnInterfaceImplTwo;
-import no.saua.remock.exampleapplication.SomeService;
-import no.saua.remock.exampleapplication.SomeServiceWithDependencies;
+import javax.inject.Inject;
+
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests various forms of cache scenarios. Note that the ordering in the @SuiteClasses is significant.
  */
 @RunWith(Suite.class)
-@SuiteClasses({SomeTestClass.class, SomeTestClassEqual.class, SomeTestClassNotEqual0.class,
-                SomeTestClassNotEqual1.class, SomeTestClassNotEqual2.class, SomeTestClassNotEqual3.class})
+@SuiteClasses({SomeTestClass.class, SomeTestClassEqual1.class, SomeTestClassEqual2.class, SomeTestClassNotEqual0.class,
+        SomeTestClassNotEqual1.class, SomeTestClassNotEqual2.class, SomeTestClassNotEqual3.class})
 public class ContextCacheTest {
 
     private static ApplicationContext cachedSpringContextWithRejectAndSpy;
@@ -40,7 +36,7 @@ public class ContextCacheTest {
     @ContextConfiguration(classes = SomeService.class)
     @Reject(SomeServiceWithDependencies.class)
     @WrapWithSpy(AnInterface.class)
-    @ReplaceWithImpl(value = AnInterface.class, with= AnInterfaceImplTwo.class)
+    @ReplaceWithImpl(value = AnInterface.class, with = AnInterfaceImplTwo.class)
     public static class SomeTestClass extends CommonTest {
 
         @Inject
@@ -57,8 +53,22 @@ public class ContextCacheTest {
     @ContextConfiguration(classes = SomeService.class)
     @Reject(SomeServiceWithDependencies.class)
     @WrapWithSpy(AnInterface.class)
-    @ReplaceWithImpl(value = AnInterface.class, with= AnInterfaceImplTwo.class)
-    public static class SomeTestClassEqual extends CommonTest {
+    @ReplaceWithImpl(value = AnInterface.class, with = AnInterfaceImplTwo.class)
+    public static class SomeTestClassEqual1 extends CommonTest {
+
+        @Inject
+        private ApplicationContext springContext;
+
+        @Test
+        public void test() {
+            assertNotNull(springContext);
+            assertTrue("Should get the exact same spring context", cachedSpringContextWithRejectAndSpy ==
+                    springContext);
+        }
+    }
+
+    // :: This test should use same spring context a first test because we extend it.
+    public static class SomeTestClassEqual2 extends SomeTestClass {
 
         @Inject
         private ApplicationContext springContext;
@@ -157,4 +167,5 @@ public class ContextCacheTest {
             assertNotEquals("Should get different spring context", cachedSpringContextWithSpy, springContext);
         }
     }
+
 }

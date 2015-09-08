@@ -13,33 +13,26 @@ import java.util.Set;
  */
 public class RemockMergedContextConfiguration extends MergedContextConfiguration {
 
-    private final Set<Rejecter> rejecters;
-    private final Set<SpringBeanDefiner> definers;
-    private final Set<SpyDefinition> spies;
-    private final boolean eagerInitialized;
+    private final RemockAnnotations annotations;
 
     public RemockMergedContextConfiguration(MergedContextConfiguration mergedConfig) {
         super(mergedConfig);
-        RemockAnnotations annotationFinder = RemockAnnotationFinder.findFor(getTestClass());
-        rejecters = annotationFinder.getRejecters();
-        definers = annotationFinder.getDefiners();
-        spies = annotationFinder.getSpies();
-        eagerInitialized = annotationFinder.foundEagerAnnotation();
+        annotations = RemockAnnotationFinder.findFor(getTestClass());
     }
 
-    @Override
-    public boolean equals(Object other) {
-        if (super.equals(other) && other instanceof RemockMergedContextConfiguration) {
-            RemockMergedContextConfiguration otherObj = (RemockMergedContextConfiguration) other;
-            return super.equals(other) && Objects.equals(rejecters, otherObj.rejecters)
-                            && Objects.equals(definers, otherObj.definers) && Objects.equals(spies, otherObj.spies)
-                            && Objects.equals(eagerInitialized, otherObj.eagerInitialized);
-        }
-        return false;
+    public RemockAnnotations getAnnotations() {
+        return annotations;
     }
 
     @Override
     public int hashCode() {
-        return 31 * super.hashCode() + Objects.hash(rejecters, definers, spies, eagerInitialized);
+        return 31 * super.hashCode() + annotations.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return super.equals(other)
+                && (other instanceof RemockMergedContextConfiguration)
+                && annotations.equals(((RemockMergedContextConfiguration) other).annotations);
     }
 }

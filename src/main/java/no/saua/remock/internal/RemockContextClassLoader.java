@@ -1,13 +1,13 @@
 package no.saua.remock.internal;
 
-import no.saua.remock.internal.RemockAnnotationFinder.RemockAnnotations;
 import no.saua.remock.internal.SpyDefinition.SpyInitializer;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.test.context.ContextConfigurationAttributes;
+import org.springframework.test.context.MergedContextConfiguration;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import java.lang.reflect.Field;
-import java.util.Set;
 
 /**
  * This is Remocks core class. It:
@@ -20,51 +20,33 @@ import java.util.Set;
  */
 public class RemockContextClassLoader extends AnnotationConfigContextLoader {
 
-    private Set<Rejecter> rejecters;
-    private Set<SpringBeanDefiner> definers;
-    private Set<SpyDefinition> spyDefinitions;
-    private RemockBeanFactory beanFactory;
-    private boolean foundEagerAnnotation;
-
     @Override
-    public void prepareContext(GenericApplicationContext context) {
+    protected void prepareContext(ConfigurableApplicationContext context, MergedContextConfiguration mergedConfig) {
+        if (!(mergedConfig instanceof RemockMergedContextConfiguration)) {
+            throw new AssertionError("MergedContextConfiguration is not a RemockMergedContextConfiguration. This should not happen.");
+        }
+
+        RemockAnnotationFinder.RemockAnnotations remockConfig = ((RemockMergedContextConfiguration) mergedConfig).getAnnotations();
         try {
             Field beanFactoryField = GenericApplicationContext.class.getDeclaredField("beanFactory");
             beanFactoryField.setAccessible(true);
-            beanFactory = createBeanFactory();
+            BeanFactory beanFactory = createBeanFactory(remockConfig);
             beanFactoryField.set(context, beanFactory);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException("Unable to perform bean factory hack", e);
         }
     }
 
-    protected RemockBeanFactory createBeanFactory() {
-        return new RemockBeanFactory(rejecters, foundEagerAnnotation);
-    }
+    protected RemockBeanFactory createBeanFactory(RemockAnnotationFinder.RemockAnnotations remockConfig) {
+        RemockBeanFactory remockBeanFactory = new RemockBeanFactory(remockConfig.getRejecters(), remockConfig.foundEagerAnnotation());
 
-    @Override
-    protected void customizeContext(GenericApplicationContext context) {
-        super.customizeContext(context);
-        for (SpringBeanDefiner mockDefinition : definers) {
-            beanFactory.registerMockBeanDefinition(mockDefinition.getBeanName(), mockDefinition.getBeanDefinition());
+        // :: Initialize mock definitions
+        for (SpringBeanDefiner mockDefinition : remockConfig.getDefiners()) {
+            remockBeanFactory.registerMockBeanDefinition(mockDefinition.getBeanName(), mockDefinition.getBeanDefinition());
         }
 
-        beanFactory.registerSingleton("$RemockSpyInitializer$", new SpyInitializer(spyDefinitions));
-    }
-
-    @Override
-    public void processContextConfiguration(ContextConfigurationAttributes configAttributes) {
-        super.processContextConfiguration(configAttributes);
-        findRemockDefinitionsOnClass(configAttributes.getDeclaringClass());
-    }
-
-    private void findRemockDefinitionsOnClass(Class<?>... classes) {
-        for (Class<?> clazz : classes) {
-            RemockAnnotations testClassHandler = RemockAnnotationFinder.findFor(clazz);
-            rejecters = testClassHandler.getRejecters();
-            definers = testClassHandler.getDefiners();
-            spyDefinitions = testClassHandler.getSpies();
-            foundEagerAnnotation = testClassHandler.foundEagerAnnotation();
-        }
+        // :: Register the spy initializer
+        remockBeanFactory.registerSingleton("$RemockSpyInitializer$", new SpyInitializer(remockConfig.getSpies()));
+        return remockBeanFactory;
     }
 }

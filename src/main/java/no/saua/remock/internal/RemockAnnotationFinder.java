@@ -58,6 +58,11 @@ public class RemockAnnotationFinder {
                     && Objects.equals(spies, other.spies);
         }
 
+        @Override
+        public int hashCode() {
+            return Objects.hash(rejecters, definers, spies, foundEagerAnnotation);
+        }
+
         public RemockAnnotations mergeWith(RemockAnnotations other) {
             RemockAnnotations result = new RemockAnnotations();
             result.definers.addAll(definers);
