@@ -38,7 +38,7 @@ public class RemockContextClassLoader extends AnnotationConfigContextLoader {
     }
 
     protected RemockBeanFactory createBeanFactory(RemockAnnotationFinder.RemockConfiguration remockConfig) {
-        RemockBeanFactory remockBeanFactory = new RemockBeanFactory(remockConfig.getRejecters(), remockConfig.foundEagerAnnotation());
+        RemockBeanFactory remockBeanFactory = new RemockBeanFactory(remockConfig.getRejecters(), remockConfig.foundDisableLazyInitAnnotation());
 
         // :: Initialize mock definitions
         for (SpringBeanDefiner mockDefinition : remockConfig.getDefiners()) {

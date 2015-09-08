@@ -151,16 +151,16 @@ on a superclass, or by using the `@RemockContextConfiguration`.
 
 For more detailed examples see the test cases.
 
-## Eagerly intializing beans
+## Disable lazy initialization of beans
 
-Remock will by default set all your beans to be lazily initialized. Annotating your test with `@EagerlyInitialized`
+Remock will by default set all your beans to be lazily initialized. Annotating your test with `@DisableLazyInit`
 disables the lazy init.
 
     @RunWith(SpringJUnit4ClassRunner.class)
     @BootstrapWith(RemockBootstrapper.class)
     @ContextConfiguration(classes = {SomeService.class, SomeOtherService.class})
-    @EagerlyInitialized
-    public class RemockContextConfigurationTest {
+    @DisableLazyInit
+    public class MyTest {
 
         @Test
         public void test() {

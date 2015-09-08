@@ -82,7 +82,7 @@ public class ContextCacheTest {
     }
 
     // :: This test should NOT use same spring context as previous test.
-    @EagerlyInitialized
+    @DisableLazyInit
     @ContextConfiguration(classes = SomeService.class)
     @Reject(SomeServiceWithDependencies.class)
     @WrapWithSpy(AnInterface.class)

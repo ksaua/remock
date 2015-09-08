@@ -30,13 +30,13 @@ public class RemockAnnotationFinder {
     }
 
     public static class RemockConfiguration extends Entity<RemockConfiguration> {
-        private boolean foundEagerAnnotation = false;
+        private boolean foundDisableLazyInitAnnotation = false;
         private Set<SpringBeanDefiner> definers = new HashSet<>();
         private Set<SpyDefinition> spies = new HashSet<>();
         private Set<Rejecter> rejecters = new HashSet<>();
 
-        public boolean foundEagerAnnotation() {
-            return foundEagerAnnotation;
+        public boolean foundDisableLazyInitAnnotation() {
+            return foundDisableLazyInitAnnotation;
         }
 
         public Set<Rejecter> getRejecters() {
@@ -53,14 +53,14 @@ public class RemockAnnotationFinder {
 
         @Override
         public boolean equals(RemockConfiguration other) {
-            return Objects.equals(foundEagerAnnotation, other.foundEagerAnnotation)
+            return Objects.equals(foundDisableLazyInitAnnotation, other.foundDisableLazyInitAnnotation)
                     && Objects.equals(definers, other.definers) && Objects.equals(rejecters, other.rejecters)
                     && Objects.equals(spies, other.spies);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(rejecters, definers, spies, foundEagerAnnotation);
+            return Objects.hash(rejecters, definers, spies, foundDisableLazyInitAnnotation);
         }
 
         public RemockConfiguration mergeWith(RemockConfiguration other) {
@@ -71,7 +71,7 @@ public class RemockAnnotationFinder {
             result.spies.addAll(other.spies);
             result.rejecters.addAll(rejecters);
             result.rejecters.addAll(other.rejecters);
-            result.foundEagerAnnotation = foundEagerAnnotation || other.foundEagerAnnotation;
+            result.foundDisableLazyInitAnnotation = foundDisableLazyInitAnnotation || other.foundDisableLazyInitAnnotation;
             return result;
         }
     }
@@ -85,8 +85,8 @@ public class RemockAnnotationFinder {
         RemockConfiguration result = new RemockConfiguration();
 
         // :: Find configuration present on the current class
-        if (clazz.getAnnotation(EagerlyInitialized.class) != null) {
-            result.foundEagerAnnotation = true;
+        if (clazz.getAnnotation(DisableLazyInit.class) != null) {
+            result.foundDisableLazyInitAnnotation = true;
         }
         for (Map.Entry<Class<? extends Annotation>, AnnotationVisitor> entry : annotationReaders.entrySet()) {
             for (Annotation annot: clazz.getAnnotationsByType(entry.getKey())) {

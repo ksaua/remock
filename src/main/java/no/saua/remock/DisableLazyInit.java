@@ -10,5 +10,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface EagerlyInitialized {
+public @interface DisableLazyInit {
+    Class<?>[] value() default {};
+    String[] beanName() default {};
 }
