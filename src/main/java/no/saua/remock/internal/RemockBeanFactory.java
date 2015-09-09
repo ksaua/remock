@@ -1,8 +1,5 @@
 package no.saua.remock.internal;
 
-import java.lang.reflect.Method;
-import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
@@ -10,6 +7,8 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.core.type.MethodMetadata;
 import org.springframework.core.type.StandardMethodMetadata;
+
+import java.lang.reflect.Method;
 
 public class RemockBeanFactory extends DefaultListableBeanFactory {
 
@@ -31,7 +30,7 @@ public class RemockBeanFactory extends DefaultListableBeanFactory {
             // finds the class anyway:
             if (beanClassName == null && beanDefinition instanceof AnnotatedBeanDefinition) {
                 MethodMetadata factoryMethodMetadata =
-                                ((AnnotatedBeanDefinition) beanDefinition).getFactoryMethodMetadata();
+                        ((AnnotatedBeanDefinition) beanDefinition).getFactoryMethodMetadata();
                 if (factoryMethodMetadata instanceof StandardMethodMetadata) {
                     StandardMethodMetadata methodMetaData = (StandardMethodMetadata) factoryMethodMetadata;
                     beanClazz = methodMetaData.getIntrospectedMethod().getReturnType();
@@ -44,7 +43,7 @@ public class RemockBeanFactory extends DefaultListableBeanFactory {
                     // one which matches the name -- this is not optimal. But it should not matter much, the only thing
                     // which may trip this up is having to classes with same name but different return values which is
                     // not something we would expect in (sane) @Configuration classes.
-                    for (Method m: factoryClazz.getDeclaredMethods()) {
+                    for (Method m : factoryClazz.getDeclaredMethods()) {
                         if (factoryMethodMetadata.getMethodName().equals(m.getName())) {
                             beanClazz = m.getReturnType();
                         }
