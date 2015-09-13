@@ -2,6 +2,7 @@
 * Initial support for Spring MVC
 * The Remock configuration is now found using the actually test-class insteadof the class annotated with
   @ContextConfiguration.
+* @EagerlyInitialized renamed to @DisableLazyInit which is more semantically correct.
 
 # 0.4.0
 * Stopped supporting Java 7 (due to future usage of @Repeatable annotations).
