@@ -170,6 +170,40 @@ disables the lazy init.
 
 If you do not want everything to be eagerly initialized, you can specify which beans you want to disable lazy init for.
 
+## Using Remock and Spring MVC
+
+Since Spring MVC's `@WebAppConfiguration` also uses the `@BootstrapWith` annotation you will instead have to use the
+equivalent `@RemockWebAppTest` annotation.
+
+    @RunWith(SpringJUnit4ClassRunner.class)
+    @BootstrapWith(RemockBootstrapper.class)
+    @ContextConfiguration(classes = WebAppTest.MyController.class)
+    @RemockWebAppTest
+    public class WebAppTest extends CommonTest {
+
+        @Inject
+        private WebApplicationContext context;
+
+        @Test
+        public void meh() throws Exception {
+            MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/abc")).andReturn();
+            String contentAsString = mvcResult.getResponse().getContentAsString();
+            assertEquals("abcxyz", contentAsString);
+        }
+
+        @Controller
+        public static class MyController {
+            @RequestMapping("/abc")
+            @ResponseBody
+            public String abc() {
+                return "abcxyz";
+            }
+        }
+    }
+
+Note that lazy loading does appears not to work correctly with spring mvc `@Controller`s.
+
 # Difference between Springockito and Remock
 
 The big difference between Springockito and Remock is whether or not the original implementation lives inside springs

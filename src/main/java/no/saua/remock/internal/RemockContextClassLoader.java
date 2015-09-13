@@ -6,6 +6,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.test.context.MergedContextConfiguration;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
 
 import java.lang.reflect.Field;
 
@@ -18,15 +19,31 @@ import java.lang.reflect.Field;
  * <li>Registers a {@link SpyInitializer}.</li>
  * </ul>
  */
-public class RemockContextClassLoader extends AnnotationConfigContextLoader {
+public class RemockContextClassLoader {
 
-    @Override
-    protected void prepareContext(ConfigurableApplicationContext context, MergedContextConfiguration mergedConfig) {
+    public static class Regular extends AnnotationConfigContextLoader {
+        @Override
+        public void prepareContext(ConfigurableApplicationContext context, MergedContextConfiguration mergedConfig) {
+            prepareContextCommon(context, mergedConfig);
+        }
+    }
+
+    /**
+     * Created by knut on 09.09.15.
+     */
+    public static class WebApp extends AnnotationConfigWebContextLoader {
+        @Override
+        protected void prepareContext(ConfigurableApplicationContext context, MergedContextConfiguration mergedConfig) {
+            prepareContextCommon(context, mergedConfig);
+        }
+    }
+
+    public static void prepareContextCommon(ConfigurableApplicationContext context, MergedContextConfiguration mergedConfig) {
         if (!(mergedConfig instanceof RemockMergedContextConfiguration)) {
             throw new AssertionError("MergedContextConfiguration is not a RemockMergedContextConfiguration. This should not happen.");
         }
 
-        RemockConfiguration remockConfig = ((RemockMergedContextConfiguration) mergedConfig).getAnnotations();
+        RemockConfiguration remockConfig = ((RemockMergedContextConfiguration) mergedConfig).getRemockConfiguration();
         try {
             Field beanFactoryField = GenericApplicationContext.class.getDeclaredField("beanFactory");
             beanFactoryField.setAccessible(true);
@@ -37,7 +54,7 @@ public class RemockContextClassLoader extends AnnotationConfigContextLoader {
         }
     }
 
-    protected RemockBeanFactory createBeanFactory(RemockConfiguration remockConfig) {
+    public static RemockBeanFactory createBeanFactory(RemockConfiguration remockConfig) {
         RemockBeanFactory remockBeanFactory = new RemockBeanFactory(remockConfig);
 
         // :: Initialize mock definitions
@@ -49,4 +66,6 @@ public class RemockContextClassLoader extends AnnotationConfigContextLoader {
         remockBeanFactory.registerSingleton("$RemockSpyInitializer$", new SpyInitializer(remockConfig.getSpies()));
         return remockBeanFactory;
     }
+
+
 }

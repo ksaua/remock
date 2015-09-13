@@ -1,3 +1,8 @@
+# 0.5.0
+* Initial support for Spring MVC
+* The Remock configuration is now found using the actually test-class insteadof the class annotated with
+  @ContextConfiguration.
+
 # 0.4.0
 * Stopped supporting Java 7 (due to future usage of @Repeatable annotations).
 

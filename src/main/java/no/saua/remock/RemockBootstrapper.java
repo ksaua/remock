@@ -1,11 +1,10 @@
 package no.saua.remock;
 
-import no.saua.remock.internal.RemockBeanFactory;
-import no.saua.remock.internal.RemockContextClassLoader;
-import no.saua.remock.internal.RemockMergedContextConfiguration;
-import no.saua.remock.internal.RemockTestExecutionListener;
+import no.saua.remock.internal.*;
+import no.saua.remock.internal.RemockMergedContextConfiguration_WebApp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.test.context.ContextLoader;
 import org.springframework.test.context.MergedContextConfiguration;
 import org.springframework.test.context.support.AbstractTestContextBootstrapper;
@@ -22,14 +21,24 @@ public class RemockBootstrapper extends AbstractTestContextBootstrapper {
     private static final Logger log = LoggerFactory.getLogger(RemockBeanFactory.class);
 
     @Override
-    protected Class<? extends RemockContextClassLoader> getDefaultContextLoaderClass(Class<?> testClass) {
-        return RemockContextClassLoader.class;
+    protected Class<? extends ContextLoader> getDefaultContextLoaderClass(Class<?> testClass) {
+        if (AnnotationUtils.findAnnotation(testClass, RemockWebAppTest.class) != null) {
+            return RemockContextClassLoader.WebApp.class;
+        }
+
+        return RemockContextClassLoader.Regular.class;
     }
 
     @Override
     protected MergedContextConfiguration processMergedContextConfiguration(MergedContextConfiguration mergedConfig) {
-        log.debug("Using Remock's MergecContextConfiguration");
-        return new RemockMergedContextConfiguration(mergedConfig);
+        Class<?> testClass = getBootstrapContext().getTestClass();
+        RemockConfiguration remockConfig = RemockConfiguration.findFor(testClass);
+
+        RemockWebAppTest annotation = AnnotationUtils.findAnnotation(testClass, RemockWebAppTest.class);
+        if (annotation != null) {
+            return new RemockMergedContextConfiguration_WebApp(mergedConfig, remockConfig, annotation.value());
+        }
+        return new RemockMergedContextConfiguration_Regular(mergedConfig, remockConfig);
     }
 
     @Override
