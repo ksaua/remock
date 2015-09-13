@@ -17,6 +17,20 @@ Remock allows you to easily:
 
 Note: Remock only works with Spring 4.1.1 (or later) and Java 8 (or later).
 
+# Table of Contents
+
+  * [Remock](#remock)
+  * [Getting it](#getting-it)
+  * [Using it](#using-it)
+    * [Mocking out a dependency:](#mocking-out-a-dependency)
+    * [Spying on a dependency:](#spying-on-a-dependency)
+    * [Replacing a bean with a non-mockito mock](#replacing-a-bean-with-a-non-mockito-mock)
+    * [Rejecting a dependency:](#rejecting-a-dependency)
+    * [Grouping common mocks](#grouping-common-mocks)
+    * [Disable lazy initialization of beans](#disable-lazy-initialization-of-beans)
+    * [Using Remock and Spring MVC](#using-remock-and-spring-mvc)
+  * [Difference between Springockito and Remock](#difference-between-springockito-and-remock)
+
 # Getting it
 
 Follow [this link](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22no.saua.remock%22) to maven central. Choose the
