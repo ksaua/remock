@@ -1,9 +1,6 @@
 package no.saua.remock;
 
 import no.saua.remock.internal.*;
-import no.saua.remock.internal.RemockMergedContextConfiguration_WebApp;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.test.context.ContextLoader;
 import org.springframework.test.context.MergedContextConfiguration;
@@ -14,11 +11,10 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Bootstrapper for Remock. Sets up the context loader {@link RemockContextClassLoader}.
+ * Bootstrapper for Remock. Sets up the context loader {@link RemockContextClassLoader.Regular} or {@link
+ * RemockContextClassLoader.WebApp} for when using the {@link RemockWebAppTest} annotation..
  */
 public class RemockBootstrapper extends AbstractTestContextBootstrapper {
-
-    private static final Logger log = LoggerFactory.getLogger(RemockBeanFactory.class);
 
     @Override
     protected Class<? extends ContextLoader> getDefaultContextLoaderClass(Class<?> testClass) {
