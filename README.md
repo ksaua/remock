@@ -186,8 +186,13 @@ If you do not want everything to be eagerly initialized, you can specify which b
 
 ## Using Remock and Spring MVC
 
-Since Spring MVC's `@WebAppConfiguration` also uses the `@BootstrapWith` annotation you will instead have to use the
-equivalent `@RemockWebAppTest` annotation.
+Trying to use Spring's `@WebAppConfiguration` in conjunction with Remock will fail with an error message like:
+
+    java.lang.IllegalStateException: Configuration error: found multiple declarations of @BootstrapWith on test class
+    with values [class org.springframework.test.context.web.WebTestContextBootstrapper, class
+    no.saua.remock.RemockBootstrapper]
+
+Instead you'll have to use the equivalent `@RemockWebAppTest` annotation:
 
     @RunWith(SpringJUnit4ClassRunner.class)
     @BootstrapWith(RemockBootstrapper.class)
@@ -217,6 +222,8 @@ equivalent `@RemockWebAppTest` annotation.
     }
 
 Note that lazy loading does appears not to work correctly with spring mvc `@Controller`s.
+
+
 
 # Difference between Springockito and Remock
 
