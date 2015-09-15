@@ -189,7 +189,7 @@ If you do not want everything to be eagerly initialized, you can specify which b
 Trying to use Spring's `@WebAppConfiguration` in conjunction with Remock will fail with an error message like:
 
     java.lang.IllegalStateException: Configuration error: found multiple declarations of @BootstrapWith on test class
-    with values [class org.springframework.test.context.web.WebTestContextBootstrapper, class
+    [org.example.MyClass] with values [class org.springframework.test.context.web.WebTestContextBootstrapper, class
     no.saua.remock.RemockBootstrapper]
 
 Instead you'll have to use the equivalent `@RemockWebAppTest` annotation:
