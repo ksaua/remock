@@ -1,3 +1,6 @@
+# 0.5.1
+* Inadvertently transitively depended on Spring 4.2.1 instead of 4.1.1 which is the minimum.
+
 # 0.5.0
 * Initial support for Spring MVC
 * The Remock configuration is now found using the actually test-class insteadof the class annotated with
