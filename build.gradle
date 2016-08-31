@@ -36,7 +36,7 @@ dependencies {
     compile 'org.springframework:spring-test:' + springVersion
     compile 'org.springframework:spring-context:' + springVersion
 
-    testCompile 'junit:junit:4.11'
+    testCompile 'junit:junit:4.12'
 
     // Logging
     testCompile 'org.apache.logging.log4j:log4j-api:2.1'
@@ -50,7 +50,7 @@ dependencies {
 }
 
 // Test against multiple versions of spring.
-['4.1.1.RELEASE', '4.1.+', '4.2.0.RELEASE', '4.2.+'].each { version ->
+['4.1.1.RELEASE', '4.1.+', '4.2.0.RELEASE', '4.2.+', '4.3.0.RELEASE', '4.3.+'].each { version ->
     def config = configurations.create("testSpringCompile_" + version)
     config.extendsFrom(configurations.testCompile)
     config.resolutionStrategy.eachDependency {
