@@ -74,12 +74,15 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
     from sourceSets.main.allSource
 }
-
-test {
+tasks.withType(Test) {
     testLogging {
         events "failed"
         exceptionFormat "short"
     }
+    // Exclude the inner classes of ContextCacheTest, but not the class itself. Gradle will try to run the tests both
+    // the suite and alone. Alone will fail because it checks the caching of spring contexts which are re-used in
+    // multiple tests
+    exclude 'no/saua/remock/ContextCacheTest$*'
 }
 artifacts {
     archives javadocJar, sourcesJar

@@ -44,7 +44,7 @@ public class ContextCacheTest {
 
         @Test
         public void test() {
-            assertNotNull(springContext);
+            assertNotNull("Spring context shall not be null", springContext);
             cachedSpringContextWithRejectAndSpy = springContext;
         }
     }
@@ -61,7 +61,10 @@ public class ContextCacheTest {
 
         @Test
         public void test() {
-            assertNotNull(springContext);
+            // Verify that the previous test has run
+            assertNotNull("cachedSpringContextWithRejectAndSpy shall be set", cachedSpringContextWithRejectAndSpy);
+
+            assertNotNull("Spring context shall not be null", springContext);
             assertTrue("Should get the exact same spring context", cachedSpringContextWithRejectAndSpy ==
                     springContext);
         }
@@ -75,7 +78,10 @@ public class ContextCacheTest {
 
         @Test
         public void test() {
-            assertNotNull(springContext);
+            // Verify that the previous test has run
+            assertNotNull("cachedSpringContextWithRejectAndSpy shall be set", cachedSpringContextWithRejectAndSpy);
+
+            assertNotNull("Spring context shall not be null", springContext);
             assertTrue("Should get the exact same spring context", cachedSpringContextWithRejectAndSpy ==
                     springContext);
         }
@@ -94,8 +100,11 @@ public class ContextCacheTest {
 
         @Test
         public void test() {
-            assertNotNull(springContext);
-            assertNotNull(cachedSpringContextWithRejectAndSpy);
+            // Verify that the previous test has run
+            assertNotNull("cachedSpringContextWithRejectAndSpy shall be set", cachedSpringContextWithRejectAndSpy);
+
+
+            assertNotNull("Spring context shall not be null", springContext);
             assertNotEquals("Should NOT get the exact same spring context", cachedSpringContextWithRejectAndSpy,
                             springContext);
         }
@@ -111,7 +120,11 @@ public class ContextCacheTest {
 
         @Test
         public void test() {
-            assertNotNull(springContext);
+            // Verify that the previous test has run
+            assertNotNull("cachedSpringContextWithRejectAndSpy shall be set", cachedSpringContextWithRejectAndSpy);
+
+
+            assertNotNull("Spring context shall not be null", springContext);
             assertNotEquals("Should get different spring context", cachedSpringContextWithRejectAndSpy, springContext);
             cachedSpringContextWithReject = springContext;
         }
@@ -127,7 +140,12 @@ public class ContextCacheTest {
 
         @Test
         public void test() {
-            assertNotNull(springContext);
+            // Verify that the previous test has run
+            assertNotNull("cachedSpringContextWithRejectAndSpy shall be set", cachedSpringContextWithRejectAndSpy);
+            assertNotNull("cachedSpringContextWithReject shall be set", cachedSpringContextWithReject);
+
+
+            assertNotNull("Spring context shall not be null", springContext);
             assertNotEquals("Should get different spring context", cachedSpringContextWithRejectAndSpy, springContext);
             assertNotEquals("Should get different spring context", cachedSpringContextWithReject, springContext);
             cachedSpringContextWithSpy = springContext;
@@ -144,7 +162,13 @@ public class ContextCacheTest {
 
         @Test
         public void test() {
-            assertNotNull(springContext);
+            // Verify that the previous test has run
+            assertNotNull("cachedSpringContextWithRejectAndSpy shall be set", cachedSpringContextWithRejectAndSpy);
+            assertNotNull("cachedSpringContextWithReject shall be set", cachedSpringContextWithReject);
+            assertNotNull("cachedSpringContextWithSpy shall be set", cachedSpringContextWithSpy);
+
+
+            assertNotNull("Spring context shall not be null", springContext);
             assertNotEquals("Should get different spring context", cachedSpringContextWithRejectAndSpy, springContext);
             assertNotEquals("Should get different spring context", cachedSpringContextWithReject, springContext);
             cachedSpringContextWithImpl = springContext;
@@ -160,7 +184,14 @@ public class ContextCacheTest {
 
         @Test
         public void test() {
-            assertNotNull(springContext);
+            // Verify that the previous test has run
+            assertNotNull("cachedSpringContextWithRejectAndSpy shall be set", cachedSpringContextWithRejectAndSpy);
+            assertNotNull("cachedSpringContextWithReject shall be set", cachedSpringContextWithReject);
+            assertNotNull("cachedSpringContextWithSpy shall be set", cachedSpringContextWithSpy);
+            assertNotNull("cachedSpringContextWithImpl shall be set", cachedSpringContextWithImpl);
+
+
+            assertNotNull("Spring context shall not be null", springContext);
             assertNotEquals("Should get different spring context", cachedSpringContextWithRejectAndSpy, springContext);
             assertNotEquals("Should get different spring context", cachedSpringContextWithImpl, springContext);
             assertNotEquals("Should get different spring context", cachedSpringContextWithReject, springContext);
