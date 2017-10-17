@@ -14,7 +14,7 @@ public class RejectBeanNameDefinition extends Entity<RejectBeanNameDefinition> i
 
     @Override
     public boolean shouldReject(String beanName, Class<?> beanClass) {
-        return beanName.equals(this.beanName);
+        return this.beanName.equals(beanName);
     }
 
     @Override
