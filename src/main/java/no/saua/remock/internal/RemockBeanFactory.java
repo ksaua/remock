@@ -96,7 +96,7 @@ public class RemockBeanFactory extends DefaultListableBeanFactory {
     protected Class<?> getTypeForFactoryBean(FactoryBean<?> factoryBean) {
         Class<?> clazz = super.getTypeForFactoryBean(factoryBean);
 
-        // Remock also uses factoryBeans, if it one of ours, then of course it ok.
+        // Remock also uses factoryBeans, if it is one of ours, then of course it ok.
         if (factoryBean instanceof MockDefinition.MockFactoryBean) {
             return clazz;
         }

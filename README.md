@@ -136,7 +136,7 @@ This is a bit out of the ordinary, but it's quite powerful. This is particularly
 
 Another use-case is for controlling which beans are defined and lifecycled when a `@ComponentScan` is used.
 
-`@Reject` can also be used for a field, though a reason why you would do this alludes me. `@Reject` is repeatable.
+`@Reject` can also be used for a field, though I cannot see a reason why you would. `@Reject` is repeatable.
 
 ## Grouping common mocks
 
@@ -221,8 +221,7 @@ Instead you'll have to use the equivalent `@RemockWebAppTest` annotation:
         }
     }
 
-Note that lazy loading does appears not to work correctly with spring mvc `@Controller`s.
-
+Note that lazy loading does not appear to work correctly with spring mvc `@Controller`s.
 
 
 # Difference between Springockito and Remock
@@ -233,3 +232,7 @@ they will still be injected if you `@Inject List<InterfaceOrSuperClass>`, or `@I
 
 Remock takes a different approach. It takes control over Spring's bean factory and downright rejects adding the
 bean definitions of beans it knows should be mocked or rejected.
+
+With regards to bean factories Remock cannot reject them because it cannot know which class the bean factory will create
+until after Spring has resolved the bean factory. Remock will instead ensure that Spring never uses the factory-method
+by returning a bogus class if the bean factory was about to create a rejected/mocked class.
