@@ -109,9 +109,12 @@ public class RemockConfiguration extends Entity<RemockConfiguration> {
                 result.disableLazyInit = true;
              }
         }
+
+        // :: Get the rejecters/definers/spies from the annotation
+        List<AnnotationVisitor.AnnotationVisitorResult> annotationVisitorResults = new ArrayList<>();
         for (Map.Entry<Class<? extends Annotation>, AnnotationVisitor> entry : annotationReaders.entrySet()) {
             for (Annotation annot: clazz.getAnnotationsByType(entry.getKey())) {
-                entry.getValue().visitClass(annot, result.definers, result.spies, result.rejecters);
+                annotationVisitorResults.add(entry.getValue().visitClass(annot));
             }
         }
 
@@ -119,9 +122,15 @@ public class RemockConfiguration extends Entity<RemockConfiguration> {
             for (Map.Entry<Class<? extends Annotation>, AnnotationVisitor> entry : annotationReaders.entrySet()) {
                 Annotation annotation = field.getAnnotation(entry.getKey());
                 if (annotation != null) {
-                    entry.getValue().visitField(annotation, field, result.definers, result.spies, result.rejecters);
+                    annotationVisitorResults.add(entry.getValue().visitField(annotation, field));
                 }
             }
+        }
+
+        for (AnnotationVisitor.AnnotationVisitorResult annotationVisitorResult : annotationVisitorResults) {
+            result.definers.addAll(annotationVisitorResult.getDefiners());
+            result.spies.addAll(annotationVisitorResult.getSpies());
+            result.rejecters.addAll(annotationVisitorResult.getRejecters());
         }
 
         // :: Merge with configuration present on the super class

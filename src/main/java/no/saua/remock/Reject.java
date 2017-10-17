@@ -77,23 +77,23 @@ public @interface Reject {
 
     public static class RejectAnnotationVisitor implements AnnotationVisitor<Reject> {
         @Override
-        public void visitClass(Reject annotation, Set<SpringBeanDefiner> mocks, Set<SpyDefinition> spies,
-                        Set<Rejecter> rejecters) {
+        public AnnotationVisitorResult visitClass(Reject annotation) {
+            AnnotationVisitorResult result = new AnnotationVisitorResult();
             Class<?>[] rejectClasses = annotation.value();
             Class<?>[] exceptClasses = annotation.except();
             if (rejectClasses.length > 0) {
                 for (Class<?> rejectClass : rejectClasses) {
-                    rejecters.add(new RejectBeanClassDefinition(rejectClass, Arrays.asList(exceptClasses)));
+                    result.addRejecter(new RejectBeanClassDefinition(rejectClass, Arrays.asList(exceptClasses)));
                 }
             } else if (!Reject.DEFAULT_BEAN_NAME.equals(annotation.beanName())) {
-                rejecters.add(new RejectBeanNameDefinition(annotation.beanName()));
+                result.addRejecter(new RejectBeanNameDefinition(annotation.beanName()));
             }
+            return result;
         }
 
         @Override
-        public void visitField(Reject annot, Field field, Set<SpringBeanDefiner> mocks, Set<SpyDefinition> spies,
-                        Set<Rejecter> rejecters) {
-            rejecters.add(new RejectBeanClassDefinition(field.getType()));
+        public AnnotationVisitorResult visitField(Reject annot, Field field) {
+            return new AnnotationVisitorResult().addRejecter(new RejectBeanClassDefinition(field.getType()));
         }
     }
 
