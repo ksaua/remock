@@ -34,7 +34,7 @@ public class WebAppTest extends CommonTest {
     }
 
     @Test
-    public void meh() throws Exception {
+    public void webAppTest() throws Exception {
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/abc")).andReturn();
         String contentAsString = mvcResult.getResponse().getContentAsString();
         assertEquals("abcxyz", contentAsString);

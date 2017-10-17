@@ -28,9 +28,6 @@ public class RemockContextClassLoader {
         }
     }
 
-    /**
-     * Created by knut on 09.09.15.
-     */
     public static class WebApp extends AnnotationConfigWebContextLoader {
         @Override
         protected void prepareContext(ConfigurableApplicationContext context, MergedContextConfiguration mergedConfig) {

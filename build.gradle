@@ -79,9 +79,8 @@ tasks.withType(Test) {
         events "failed"
         exceptionFormat "short"
     }
-    // Exclude the inner classes of ContextCacheTest, but not the class itself. Gradle will try to run the tests both
-    // the suite and alone. Alone will fail because it checks the caching of spring contexts which are re-used in
-    // multiple tests
+    // Exclude the inner classes of ContextCacheTest, but not the class itself. Gradle will try to run both the suite
+    // and the tests alone. Alone will fail because the tests are dependent on the run-order.
     exclude 'no/saua/remock/ContextCacheTest$*'
 }
 artifacts {

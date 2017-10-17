@@ -45,8 +45,7 @@ public class MockDefinition extends Entity<MockDefinition> implements SpringBean
 
     public static class MockFactoryBean implements FactoryBean, Resettable {
 
-        private Object mock;
-
+        private final Object mock;
         private final Class<?> mockClass;
 
         public MockFactoryBean(Class<?> mockClass) {
