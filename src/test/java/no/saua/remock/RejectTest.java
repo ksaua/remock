@@ -34,6 +34,25 @@ public class RejectTest {
     }
 
     /**
+     * Reject on field
+     */
+    @ContextConfiguration(classes = {AnInterfaceImplOne.class, AnInterfaceImplTwo.class})
+    public static class RejectOnField extends CommonTest {
+
+        @Reject
+        private AnInterfaceImplOne rejected;
+
+        @Inject
+        private List<AnInterface> implementations;
+
+        @Test
+        public void test() {
+            assertEquals(1, implementations.size());
+            assertThat(implementations.get(0), instanceOf(AnInterfaceImplTwo.class));
+        }
+    }
+
+    /**
      * Reject all implementations
      */
     @Reject(AnInterface.class)
