@@ -14,15 +14,14 @@ public class RejectBeanClassDefinition extends Entity<RejectBeanClassDefinition>
     }
 
     public RejectBeanClassDefinition(Class<?> rejectClass, List<Class<?>> exceptClasses) {
-        assert rejectClass != null;
-        assert exceptClasses != null;
-        this.rejectClass = rejectClass;
-        this.exceptClasses = exceptClasses;
+        this.rejectClass = Objects.requireNonNull(rejectClass);
+        this.exceptClasses = Objects.requireNonNull(exceptClasses);
+
     }
 
     @Override
     public boolean shouldReject(String beanName, Class<?> beanClass) {
-        if (!rejectClass.isAssignableFrom(beanClass)) {
+        if (beanClass == null || !rejectClass.isAssignableFrom(beanClass)) {
             // -> Class does not match
             return false;
         }
