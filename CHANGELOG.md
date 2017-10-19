@@ -1,5 +1,6 @@
 # 0.6.0
 * Support for rejecting/mocking beans created by a factory bean.
+# Stopped post processing mocks.
 
 # 0.5.1
 * Inadvertently transitively depended on Spring 4.2.1 instead of 4.1.1 which is the minimum.

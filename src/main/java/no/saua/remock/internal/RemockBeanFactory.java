@@ -6,6 +6,7 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.core.type.MethodMetadata;
 import org.springframework.core.type.StandardMethodMetadata;
 
@@ -90,7 +91,35 @@ public class RemockBeanFactory extends DefaultListableBeanFactory {
     }
 
     /**
-     * Confuses Spring to not use any factory beans which would have create a rejected class.
+     * Ensures that spring does not post process any of the mocks. There's no reason to. Typically this is used for AOP.
+     */
+    @Override
+    protected Object initializeBean(String beanName, Object bean, RootBeanDefinition mbd) {
+        if (bean instanceof MockDefinition.MockFactoryBean) {
+            return bean;
+        }
+        return super.initializeBean(beanName, bean, mbd);
+    }
+
+    /**
+     * Ensures that any of our factory beans are never proxied further. Problem: If a class annotated with AOP-stuff
+     * is proxied then Spring will believe that the mock should be AOP-ed as well. Which we obviously do not want to do.
+     */
+    @Override
+    protected Object getObjectFromFactoryBean(FactoryBean<?> factory, String beanName, boolean shouldPostProcess) {
+        if (factory instanceof MockDefinition.MockFactoryBean) {
+            try {
+                return factory.getObject();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return super.getObjectFromFactoryBean(factory, beanName, shouldPostProcess);
+    }
+
+    /**
+     * Confuses Spring to not use any factory beans which would have create a rejected class. This ensures that the
+     * {@link FactoryBean#getObject()} is never called.
      */
     @Override
     protected Class<?> getTypeForFactoryBean(FactoryBean<?> factoryBean) {
