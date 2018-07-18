@@ -89,7 +89,7 @@ artifacts {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.2'
+    gradleVersion = '4.9'
     distributionUrl = "http://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
 }
 
