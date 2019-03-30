@@ -50,7 +50,7 @@ dependencies {
 }
 
 // Test against multiple versions of spring.
-def springVersionsToTest = ['4.1.1.RELEASE', '4.1.+', '4.2.+', '4.3.+', '5.0.+']
+def springVersionsToTest = ['4.1.1.RELEASE', '4.1.+', '4.2.+', '4.3.+', '5.0.+', '5.1.+']
 springVersionsToTest.each { version ->
     def config = configurations.create("testSpringCompile_" + version)
     config.extendsFrom(configurations.testCompile)
