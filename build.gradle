@@ -66,11 +66,6 @@ springVersionsToTest.each { version ->
     }
 }
 
-task javadocJar(type: Jar) {
-    classifier = 'javadoc'
-    from javadoc
-}
-
 task sourcesJar(type: Jar) {
     classifier = 'sources'
     from sourceSets.main.allSource
@@ -85,7 +80,7 @@ tasks.withType(Test) {
     exclude 'no/saua/remock/ContextCacheTest$*'
 }
 artifacts {
-    archives javadocJar, sourcesJar
+    archives sourcesJar
 }
 
 wrapper {
