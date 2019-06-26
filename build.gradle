@@ -62,7 +62,7 @@ springVersionsToTest.each { version ->
 
     tasks.create(name: "testSpring_$version", type: Test) {
         classpath = config + sourceSets.main.output + sourceSets.test.output
-        test.dependsOn it
+        check.dependsOn it
     }
 }
 
