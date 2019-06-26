@@ -1,3 +1,6 @@
+# 0.6.1
+* Support for spring profiles
+
 # 0.6.0
 * Support for rejecting/mocking beans created by a factory bean.
 * Stopped post processing mocks.

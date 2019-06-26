@@ -24,6 +24,7 @@ public class RemockContextClassLoader {
     public static class Regular extends AnnotationConfigContextLoader {
         @Override
         public void prepareContext(ConfigurableApplicationContext context, MergedContextConfiguration mergedConfig) {
+            super.prepareContext(context, mergedConfig);
             prepareContextCommon(context, mergedConfig);
         }
     }
@@ -31,6 +32,7 @@ public class RemockContextClassLoader {
     public static class WebApp extends AnnotationConfigWebContextLoader {
         @Override
         protected void prepareContext(ConfigurableApplicationContext context, MergedContextConfiguration mergedConfig) {
+            super.prepareContext(context, mergedConfig);
             prepareContextCommon(context, mergedConfig);
         }
     }
