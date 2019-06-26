@@ -1,6 +1,7 @@
 package no.saua.remock;
 
 
+import no.saua.remock.exampleapplication.SomeService;
 import org.junit.Test;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.ActiveProfiles;
@@ -11,7 +12,7 @@ import javax.inject.Inject;
 import static org.junit.Assert.assertEquals;
 
 @ActiveProfiles("remock-profile")
-@ContextConfiguration
+@ContextConfiguration(classes = SomeService.class)
 public class ProfilesTest extends CommonTest {
 
     @Inject
