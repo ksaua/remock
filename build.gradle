@@ -19,7 +19,7 @@ apply plugin: 'com.github.kt3k.coveralls'
 group = 'no.saua.remock'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-version = '0.7.0-SNAPSHOT'
+version = '0.6.1'
 
 repositories {
     mavenCentral()
@@ -70,6 +70,7 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
     from sourceSets.main.allSource
 }
+
 tasks.withType(Test) {
     testLogging {
         events "failed"
@@ -79,6 +80,7 @@ tasks.withType(Test) {
     // and the tests alone. Alone will fail because the tests are dependent on the run-order.
     exclude 'no/saua/remock/ContextCacheTest$*'
 }
+
 artifacts {
     archives sourcesJar
 }
@@ -91,6 +93,7 @@ wrapper {
 cobertura.coverageFormats = ['html', 'xml']
 
 // Only configure uploadArchives if username/password is set.
+
 if (project.hasProperty("sonatypeUsername")) {
     signing {
         sign configurations.archives
