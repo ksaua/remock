@@ -66,6 +66,19 @@ springVersionsToTest.each { version ->
     }
 }
 
+javadoc {
+    // While remock is not dependant on junit, parts of Mockito uses junit.
+    // This causes the javadoc-er to malfunction because it is unable to read those
+    // without. Using the testCompile configuration fixes this.
+    // ... also note that sonatype actually requires a javadoc even though we supply sources.
+    classpath = configurations.testCompile
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
 task sourcesJar(type: Jar) {
     classifier = 'sources'
     from sourceSets.main.allSource
@@ -82,7 +95,7 @@ tasks.withType(Test) {
 }
 
 artifacts {
-    archives sourcesJar
+    archives sourcesJar, javadocJar
 }
 
 wrapper {
