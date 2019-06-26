@@ -26,15 +26,15 @@ repositories {
 }
 
 ext {
-    springVersion = '4.1.1.RELEASE'
+    minimumSpringVersion = '4.1.1.RELEASE'
 }
 
 dependencies {
     compile 'org.slf4j:slf4j-api:1.7.7'
     compile 'javax.inject:javax.inject:1'
     compile 'org.mockito:mockito-core:1.10.19'
-    compile 'org.springframework:spring-test:' + springVersion
-    compile 'org.springframework:spring-context:' + springVersion
+    compile 'org.springframework:spring-test:' + minimumSpringVersion
+    compile 'org.springframework:spring-context:' + minimumSpringVersion
 
     testCompile 'junit:junit:4.12'
 
@@ -45,12 +45,12 @@ dependencies {
     testCompile 'org.slf4j:jcl-over-slf4j:1.7.10'
 
     // Testing webapp mocking
-    testCompile 'org.springframework:spring-webmvc:' + springVersion
+    testCompile 'org.springframework:spring-webmvc:' + minimumSpringVersion
     testCompile 'javax.servlet:javax.servlet-api:3.1.0'
 }
 
 // Test against multiple versions of spring.
-def springVersionsToTest = ['4.1.1.RELEASE', '4.1.+', '4.2.+', '4.3.+', '5.0.+', '5.1.+']
+def springVersionsToTest = [minimumSpringVersion, '4.2.+', '4.3.+', '5.0.+', '5.1.+']
 springVersionsToTest.each { version ->
     def config = configurations.create("testSpringCompile_" + version)
     config.extendsFrom(configurations.testCompile)
