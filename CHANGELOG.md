@@ -1,3 +1,6 @@
+# 1.0.0
+* Minimum spring version is now 4.2.0.
+
 # 0.6.1
 * Support for spring profiles
 
