@@ -27,7 +27,7 @@ Note: Remock only works with Spring 4.2.0 (or later) and Java 8 (or later).
     * [Replacing a bean with a non-mockito mock](#replacing-a-bean-with-a-non-mockito-mock)
     * [Rejecting a dependency:](#rejecting-a-dependency)
     * [Grouping common mocks](#grouping-common-mocks)
-    * [Disable lazy initialization of beans](#disable-lazy-initialization-of-beans)
+    * [Lazy initialization](#lazy-initialization)
     * [Using Remock and Spring MVC](#using-remock-and-spring-mvc)
   * [Difference between Springockito and Remock](#difference-between-springockito-and-remock)
 
@@ -165,10 +165,13 @@ on a superclass, or by using the `@RemockContextConfiguration`.
 
 For more detailed examples see the test cases.
 
-## Disable lazy initialization of beans
+## Lazy initialization
 
-Remock will by default set all your beans to be lazily initialized. Annotating your test with `@DisableLazyInit`
-disables the lazy init.
+A core goal of Remock is to be as fast as possible. Remock will therefore by default set all the beans to be lazily initialized.
+Remock will *not* set beans with the role ROLE_INFRASTRUCTURE with the assumption that those beans are required to correctly
+setup.
+
+Annotating your test with `@DisableLazyInit` disables the lazy init.
 
     @RunWith(SpringJUnit4ClassRunner.class)
     @BootstrapWith(RemockBootstrapper.class)

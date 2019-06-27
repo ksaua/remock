@@ -53,23 +53,31 @@ public class RemockBeanFactory extends DefaultListableBeanFactory {
                 }
             }
 
+            // Try to get the bean class
             if (beanClassName != null) {
                 beanClazz = Class.forName(beanClassName);
             }
+
             if (beanClazz != null && isBeanRejected(beanName, beanClazz)) {
-                log.info("Rejected bean [{}] with definiton [{}]", beanName, beanDefinition);
-            } else {
-                if (beanClazz == null) {
-                    log.warn("Unable to find beanclass for bean [{}] with definition [{}]", beanName, beanDefinition);
-                }
-                if (remockConfig.getEagerBeanClasses().contains(beanClazz)
-                        || remockConfig.getEagerBeanNames().contains(beanName)) {
-                    beanDefinition.setLazyInit(false);
-                } else if (!remockConfig.disableLazyInit()) {
-                    beanDefinition.setLazyInit(true);
-                }
-                super.registerBeanDefinition(beanName, beanDefinition);
+                log.info("Rejected bean [{}] with definition [{}]", beanName, beanDefinition);
+                return;
             }
+
+            if (beanClazz == null) {
+                log.warn("Unable to find beanClass for bean [{}] with definition [{}]", beanName, beanDefinition);
+            }
+
+            // Should we set the bean to lazy?
+            if (remockConfig.getEagerBeanClasses().contains(beanClazz) || remockConfig.getEagerBeanNames().contains(beanName)) {
+                log.info("Bean [{}] was not set to lazy as according to the remock configuration.", beanName);
+            } else if (beanDefinition.getRole() == BeanDefinition.ROLE_INFRASTRUCTURE) {
+                log.debug("Bean [{}] was not set to lazy because it's role is ROLE_INFRASTRUCTURE.", beanName);
+            } else if (!remockConfig.disableLazyInit()) {
+                log.trace("Bean [{}] was set to lazy", beanName);
+                beanDefinition.setLazyInit(true);
+            }
+
+            super.registerBeanDefinition(beanName, beanDefinition);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
