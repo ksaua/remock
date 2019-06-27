@@ -168,8 +168,8 @@ For more detailed examples see the test cases.
 ## Lazy initialization
 
 A core goal of Remock is to be as fast as possible. Remock will therefore by default set all the beans to be lazily initialized.
-Remock will *not* set beans with the role ROLE_INFRASTRUCTURE with the assumption that those beans are required to correctly
-setup.
+Remock will *not* set beans with the role ROLE_INFRASTRUCTURE to lazy with the assumption that those beans are required to
+correctly setup spring context.
 
 Annotating your test with `@DisableLazyInit` disables the lazy init.
 
