@@ -91,6 +91,15 @@ public class RemockConfiguration extends Entity<RemockConfiguration> {
         return result;
     }
 
+    /**
+     * Creates a RemockConfiguration which eager initializes beans with the given classes.
+     */
+    public static RemockConfiguration eagerInit(Class<?>[] eagerInitClasses) {
+        Set<Class<?>> contextConfigurationClasses = new HashSet<>(Arrays.asList(eagerInitClasses));
+        RemockConfiguration remockConfiguration = new RemockConfiguration();
+        remockConfiguration.eagerBeanClasses = contextConfigurationClasses;
+        return remockConfiguration;
+    }
 
     public static RemockConfiguration findFor(Class<?> clazz) {
         if (cache.containsKey(clazz)) {

@@ -28,8 +28,17 @@ public class RemockBootstrapper extends AbstractTestContextBootstrapper {
     @Override
     protected MergedContextConfiguration processMergedContextConfiguration(MergedContextConfiguration mergedConfig) {
         Class<?> testClass = getBootstrapContext().getTestClass();
-        RemockConfiguration remockConfig = RemockConfiguration.findFor(testClass);
 
+        // Eager initialize the classes found on the ContextConfiguration.
+        RemockConfiguration eagerInitContextConfiguration = RemockConfiguration.eagerInit(mergedConfig.getClasses());
+
+        // Find the Remock Configuration on the test class.
+        RemockConfiguration remockConfigurationForTestClass = RemockConfiguration.findFor(testClass);
+
+        // And merge it with the eager init
+        RemockConfiguration remockConfig = remockConfigurationForTestClass.mergeWith(eagerInitContextConfiguration);
+
+        // Create the correct MergedContextConfiguration class
         RemockWebAppTest annotation = AnnotationUtils.findAnnotation(testClass, RemockWebAppTest.class);
         if (annotation != null) {
             return new RemockMergedContextConfiguration_WebApp(mergedConfig, remockConfig, annotation.value());

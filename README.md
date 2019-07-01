@@ -167,15 +167,22 @@ For more detailed examples see the test cases.
 
 ## Lazy initialization
 
-A core goal of Remock is to be as fast as possible. Remock will therefore by default set all the beans to be lazily initialized.
-Remock will *not* set beans with the role ROLE_INFRASTRUCTURE to lazy with the assumption that those beans are required to
-correctly setup spring context.
+A core goal of Remock is to be as fast as possible. Remock will therefore by default set all the beans to be lazily initialized. 
+This is to enable you to point the `@ContextConfigration` at e.g. a class that does component scanning. 
 
-Annotating your test with `@DisableLazyInit` disables the lazy init.
+However, the following exceptions apply: 
+* Remock will *not* set beans with the role ROLE_INFRASTRUCTURE to lazy with the assumption that those beans are required to correctly setup the spring context.
+* Remock will *not* set beans directly defined in the `@ContextConfiguration` to lazy. The rationale for this is that by adding a class to `@ContextConfiguration` you obviously need it in your test.
+
+Anything else will be lazy unless you use: 
+
+### @DisableLazyInit
+
+Annotating your test with `@DisableLazyInit` disables the lazy init for all classes.
 
     @RunWith(SpringJUnit4ClassRunner.class)
     @BootstrapWith(RemockBootstrapper.class)
-    @ContextConfiguration(classes = {SomeService.class, SomeOtherService.class})
+    @ContextConfiguration(classes = SomeClassAnnotatedWith_Configuration.class})
     @DisableLazyInit
     public class MyTest {
 
@@ -186,6 +193,9 @@ Annotating your test with `@DisableLazyInit` disables the lazy init.
     }
 
 If you do not want everything to be eagerly initialized, you can specify which beans you want to disable lazy init for.
+
+    @DisableLazyInit(value = EagerService.class, beanName = "eagerBean")
+
 
 ## Using Remock and Spring MVC
 
@@ -224,7 +234,7 @@ Instead you'll have to use the equivalent `@RemockWebAppTest` annotation:
         }
     }
 
-Note that lazy loading does not appear to work correctly with spring mvc `@Controller`s.
+Note that lazy loading does not work with spring mvc `@Controller`s. They will all be eagerly instantiated.
 
 
 # Difference between Springockito and Remock
