@@ -1,5 +1,9 @@
+# 1.1.0
+* Beans directly referenced in the @ContextConfiguration are no longer lazy loaded. 
+
 # 1.0.0
 * Minimum spring version is now 4.2.0.
+* Beans with role ROLE_INFRASTRUCTURE are now not lazy loaded.
 
 # 0.6.1
 * Support for spring profiles
