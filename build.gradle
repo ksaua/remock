@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'net.saliman:gradle-cobertura-plugin:2.6.0' // cobertura plugin
+        classpath "net.saliman:gradle-cobertura-plugin:4.0.0"
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
     }
 }
@@ -13,7 +13,7 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'signing'
-apply plugin: 'cobertura'
+apply plugin: "net.saliman.cobertura"
 apply plugin: 'com.github.kt3k.coveralls'
 
 group = 'no.saua.remock'
@@ -99,8 +99,7 @@ artifacts {
 }
 
 wrapper {
-    gradleVersion = '5.3.1'
-    distributionUrl = "http://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
+    gradleVersion = '6.9.1'
 }
 
 cobertura.coverageFormats = ['html', 'xml']
