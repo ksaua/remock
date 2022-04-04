@@ -1,3 +1,7 @@
+# 2.0.0
+* Bumped minimum spring version to 5.0. Spring 4.x is EOL.
+* Bumped Mockito version from 1.10 -> 4.4.
+
 # 1.1.0
 * Beans directly referenced in the @ContextConfiguration are no longer lazy loaded. 
 
