@@ -29,7 +29,7 @@ ext {
 }
 
 dependencies {
-    api 'org.mockito:mockito-core:1.10.19'
+    api 'org.mockito:mockito-core:4.4.0'
     api 'org.springframework:spring-test:' + minimumSpringVersion
     api 'org.springframework:spring-context:' + minimumSpringVersion
 

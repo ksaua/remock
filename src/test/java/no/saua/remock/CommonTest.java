@@ -14,10 +14,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public abstract class CommonTest {
 
     public static boolean isMock(Object object) {
-        return new MockUtil().isMock(object);
+        return MockUtil.isMock(object);
     }
 
     public static boolean isSpy(Object object) {
-        return new MockUtil().isSpy(object);
+        return MockUtil.isSpy(object);
     }
 }
