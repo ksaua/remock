@@ -10,8 +10,7 @@ import org.springframework.test.context.ContextConfiguration;
 import javax.inject.Inject;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.*;
+import static com.google.common.truth.Truth.assertThat;
 
 
 @RunWith(Enclosed.class)
@@ -28,8 +27,8 @@ public class RejectTest {
 
         @Test
         public void test() {
-            assertEquals(1, implementations.size());
-            assertThat(implementations.get(0), instanceOf(AnInterfaceImplTwo.class));
+            assertThat(implementations).hasSize(1);
+            assertThat(implementations.get(0)).isInstanceOf(AnInterfaceImplTwo.class);
         }
     }
 
@@ -47,8 +46,8 @@ public class RejectTest {
 
         @Test
         public void test() {
-            assertEquals(1, implementations.size());
-            assertThat(implementations.get(0), instanceOf(AnInterfaceImplTwo.class));
+            assertThat(implementations).hasSize(1);
+            assertThat(implementations.get(0)).isInstanceOf(AnInterfaceImplTwo.class);
         }
     }
 
@@ -65,7 +64,7 @@ public class RejectTest {
 
         @Test
         public void test() {
-            assertNull(implementations);
+            assertThat(implementations).isNull();
         }
     }
 
@@ -81,7 +80,7 @@ public class RejectTest {
 
         @Test
         public void test() {
-            assertNull(instances);
+            assertThat(instances).isNull();
         }
     }
 
@@ -97,8 +96,8 @@ public class RejectTest {
 
         @Test
         public void test() {
-            assertEquals(1, instances.size());
-            assertThat(instances.get(0), instanceOf(SuperClass.class));
+            assertThat(instances).hasSize(1);
+            assertThat(instances.get(0)).isInstanceOf(SuperClass.class);
         }
     }
 
@@ -116,8 +115,8 @@ public class RejectTest {
 
         @Test
         public void test() {
-            assertThat(anInterface, instanceOf(AnInterfaceImplOne.class));
-            assertNull(someService);
+            assertThat(anInterface).isInstanceOf(AnInterfaceImplOne.class);
+            assertThat(someService).isNull();
         }
     }
 
@@ -135,8 +134,8 @@ public class RejectTest {
 
         @Test
         public void test() {
-            assertThat(one, instanceOf(AnInterfaceImplOne.class));
-            assertNull(two);
+            assertThat(one).isInstanceOf(AnInterfaceImplOne.class);
+            assertThat(two).isNull();
         }
     }
 
@@ -152,7 +151,7 @@ public class RejectTest {
 
         @Test
         public void test() {
-            assertNull("bean should not have been injected", someService);
+            assertThat(someService).isNull();
         }
     }
 
@@ -171,8 +170,8 @@ public class RejectTest {
 
         @Test
         public void test() {
-            assertThat(two, instanceOf(AnInterfaceImplTwo.class));
-            assertNull("should have been rejected", someService);
+            assertThat(two).isInstanceOf(AnInterfaceImplTwo.class);
+            assertThat(someService).isNull();
         }
     }
 }
