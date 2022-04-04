@@ -15,7 +15,7 @@ Remock allows you to easily:
 * Replace any spring bean with a different implementation.
 * Reject any spring bean from being created without replacing it.
 
-Note: Remock only works with Spring 4.2.0 (or later) and Java 8 (or later).
+Note: Remock only works with Spring 5.0 (or later) and Java 8 (or later).
 
 # Table of Contents
 

@@ -25,7 +25,7 @@ repositories {
 }
 
 ext {
-    minimumSpringVersion = '4.2.0.RELEASE'
+    minimumSpringVersion = '5.0.0.RELEASE'
 }
 
 dependencies {
@@ -50,7 +50,7 @@ dependencies {
 }
 
 // Test against multiple versions of spring.
-def springVersionsToTest = [minimumSpringVersion, '4.2.+', '4.3.+', '5.0.+', '5.1.+', '5.2.+', '5.3.+']
+def springVersionsToTest = [minimumSpringVersion, '5.0.+', '5.1.+', '5.2.+', '5.3.+']
 springVersionsToTest.each { version ->
     def config = configurations.create("testSpringCompile_" + version)
     config.extendsFrom(configurations.testImplementation)
