@@ -9,8 +9,7 @@ buildscript {
     }
 }
 
-
-apply plugin: 'java'
+apply plugin: 'java-library'
 apply plugin: 'maven'
 apply plugin: 'signing'
 apply plugin: "net.saliman.cobertura"
@@ -30,30 +29,31 @@ ext {
 }
 
 dependencies {
-    compile 'org.slf4j:slf4j-api:1.7.7'
-    compile 'javax.inject:javax.inject:1'
-    compile 'org.mockito:mockito-core:1.10.19'
-    compile 'org.springframework:spring-test:' + minimumSpringVersion
-    compile 'org.springframework:spring-context:' + minimumSpringVersion
+    api 'org.mockito:mockito-core:1.10.19'
+    api 'org.springframework:spring-test:' + minimumSpringVersion
+    api 'org.springframework:spring-context:' + minimumSpringVersion
 
-    testCompile 'junit:junit:4.12'
+    implementation 'org.slf4j:slf4j-api:1.7.7'
+    implementation 'javax.inject:javax.inject:1'
+
+    testImplementation 'junit:junit:4.12'
 
     // Logging
-    testCompile 'org.apache.logging.log4j:log4j-api:2.1'
-    testCompile 'org.apache.logging.log4j:log4j-core:2.1'
-    testCompile 'org.apache.logging.log4j:log4j-slf4j-impl:2.1'
-    testCompile 'org.slf4j:jcl-over-slf4j:1.7.10'
+    testImplementation 'org.apache.logging.log4j:log4j-api:2.1'
+    testImplementation 'org.apache.logging.log4j:log4j-core:2.1'
+    testImplementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.1'
+    testImplementation 'org.slf4j:jcl-over-slf4j:1.7.10'
 
     // Testing webapp mocking
-    testCompile 'org.springframework:spring-webmvc:' + minimumSpringVersion
-    testCompile 'javax.servlet:javax.servlet-api:3.1.0'
+    testImplementation 'org.springframework:spring-webmvc:' + minimumSpringVersion
+    testImplementation 'javax.servlet:javax.servlet-api:3.1.0'
 }
 
 // Test against multiple versions of spring.
 def springVersionsToTest = [minimumSpringVersion, '4.2.+', '4.3.+', '5.0.+', '5.1.+', '5.2.+', '5.3.+']
 springVersionsToTest.each { version ->
     def config = configurations.create("testSpringCompile_" + version)
-    config.extendsFrom(configurations.testCompile)
+    config.extendsFrom(configurations.testImplementation)
     config.resolutionStrategy.eachDependency {
         if (it.requested.group == 'org.springframework') {
             it.useVersion version
@@ -69,9 +69,9 @@ springVersionsToTest.each { version ->
 javadoc {
     // While remock is not dependant on junit, parts of Mockito uses junit.
     // This causes the javadoc-er to malfunction because it is unable to read those
-    // without. Using the testCompile configuration fixes this.
+    // without. Using the testImplementation configuration fixes this.
     // ... also note that sonatype actually requires a javadoc even though we supply sources.
-    classpath = configurations.testCompile
+    classpath = configurations.testImplementation
 }
 
 task javadocJar(type: Jar) {
