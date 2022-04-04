@@ -70,9 +70,9 @@ springVersionsToTest.each { version ->
 javadoc {
     // While remock is not dependant on junit, parts of Mockito uses junit.
     // This causes the javadoc-er to malfunction because it is unable to read those
-    // without. Using the testImplementation configuration fixes this.
+    // without. Using the sourceSets.main.runtimeClasspath fixes this.
     // ... also note that sonatype actually requires a javadoc even though we supply sources.
-    classpath = configurations.testImplementation
+    classpath = sourceSets.main.runtimeClasspath
 }
 
 task javadocJar(type: Jar) {
