@@ -31,7 +31,7 @@ ext {
 dependencies {
     api 'org.mockito:mockito-core:4.4.0'
     api 'org.springframework:spring-test:' + minimumSpringVersion
-    api 'org.springframework:spring-beans:' + minimumSpringVersion
+    api 'org.springframework:spring-context:' + minimumSpringVersion
 
     implementation 'org.slf4j:slf4j-api:1.7.7'
     implementation 'javax.inject:javax.inject:1'
