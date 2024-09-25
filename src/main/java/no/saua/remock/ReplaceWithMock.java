@@ -4,6 +4,7 @@ import no.saua.remock.internal.AnnotationVisitor;
 import no.saua.remock.internal.MockDefinition;
 import no.saua.remock.internal.RejectBeanClassDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.lang.annotation.*;
 import java.lang.reflect.Field;
@@ -55,7 +56,7 @@ public @interface ReplaceWithMock {
             Class<?>[] value = annotation.value();
             for (Class<?> classToMock : value) {
                 String beanName = classToMock.getSimpleName() + "$Mock$";
-                result.addSpringBeanDefiner(new MockDefinition(beanName, classToMock));
+                result.addSpringBeanDefiner(new MockDefinition(beanName, classToMock, true));
                 result.addRejecter(new RejectBeanClassDefinition(classToMock));
             }
             return result;
@@ -63,8 +64,17 @@ public @interface ReplaceWithMock {
 
         @Override
         public AnnotationVisitorResult visitField(ReplaceWithMock annotation, Field field) {
+            Qualifier qualified = field.getAnnotation(Qualifier.class);
+            boolean isQualifiedAnnotationInUse = qualified != null;
+            // ?: Is @Qualifier utilized on the field?
+            // -> Yes, then utilize the value provided by the annotation as the bean name.
+            // -> No, then simply use the field name as the bean name.
+            String beanName = isQualifiedAnnotationInUse ? qualified.value() : field.getName();
             return new AnnotationVisitorResult()
-                    .addSpringBeanDefiner(new MockDefinition(field.getName(), field.getType()))
+                    // If @Qualifier is utilized one can assume that this bean is one of many beans of the same class.
+                    // Thus, we can assume that any field annotated with @Qualifier is not to be considered the primary
+                    // Spring bean for injection.
+                    .addSpringBeanDefiner(new MockDefinition(beanName, field.getType(), !isQualifiedAnnotationInUse))
                     .addRejecter(new RejectBeanClassDefinition(field.getType()));
         }
     }
