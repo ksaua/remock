@@ -1,3 +1,6 @@
+# 2.0.1
+* Support for @ReplaceWithMock on @Qualified beans. Thanks [KevinMcT](https://github.com/KevinMcT)!
+
 # 2.0.0
 * Bumped minimum spring version to 5.0. Spring 4.x is EOL.
 * Bumped Mockito version from 1.10 -> 4.4.

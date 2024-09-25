@@ -12,19 +12,19 @@ public class MockDefinition extends Entity<MockDefinition> implements SpringBean
 
     private final Class<?> mockClass;
     private final String beanName;
-    private final boolean primary;
+    private final boolean setAsPrimary;
 
-    public MockDefinition(String beanName, Class<?> mockClass, boolean primary) {
+    public MockDefinition(String beanName, Class<?> mockClass, boolean setAsPrimary) {
         this.beanName = beanName;
         this.mockClass = mockClass;
-        this.primary = primary;
+        this.setAsPrimary = setAsPrimary;
     }
 
     @Override
     public BeanDefinition getBeanDefinition() {
         GenericBeanDefinition def = new GenericBeanDefinition();
         def.setBeanClass(MockFactoryBean.class);
-        def.setPrimary(primary);
+        def.setPrimary(setAsPrimary);
         ConstructorArgumentValues constructorArgumentValues = new ConstructorArgumentValues();
         constructorArgumentValues.addIndexedArgumentValue(0, mockClass);
         def.setConstructorArgumentValues(constructorArgumentValues);
