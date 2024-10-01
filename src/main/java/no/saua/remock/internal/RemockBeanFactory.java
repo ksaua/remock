@@ -91,7 +91,7 @@ public class RemockBeanFactory extends DefaultListableBeanFactory {
         } else if (bean instanceof FactoryBean) {
             FactoryBean<?> fb = (FactoryBean<?>) bean;
             if (isBeanRejected(beanName, fb.getObjectType())) {
-                log.info("Rejected FactoryBean[{}] beacause it would have created a [{}]", fb, fb.getObjectType());
+                log.info("Rejected FactoryBean[{}] because it would have created a [{}]", fb, fb.getObjectType());
             }
         } else {
             super.registerSingleton(beanName, bean);
