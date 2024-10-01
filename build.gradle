@@ -4,9 +4,9 @@ plugins {
 }
 
 group = 'no.saua.remock'
-sourceCompatibility = JavaVersion.VERSION_11
-targetCompatibility = JavaVersion.VERSION_11
-version = 'RC2-2.1.0'
+java.sourceCompatibility = JavaVersion.VERSION_11
+java.targetCompatibility = JavaVersion.VERSION_11
+version = '2.1.0'
 
 repositories {
     mavenCentral()

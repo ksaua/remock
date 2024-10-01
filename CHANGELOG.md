@@ -1,5 +1,6 @@
-# 2.0.1
+# 2.1.0
 * Support for @ReplaceWithMock on @Qualified beans. Thanks [KevinMcT](https://github.com/KevinMcT)!
+* Now requires Java 11.
 
 # 2.0.0
 * Bumped minimum spring version to 5.0. Spring 4.x is EOL.
