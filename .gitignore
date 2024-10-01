@@ -17,3 +17,5 @@ hs_err_pid*
 # gradle.properties contains the gpg and maven central credentials
 gradle.properties
 
+# File containing my secrets
+publish.bash

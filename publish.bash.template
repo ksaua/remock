@@ -1,0 +1,19 @@
+# This is from description here:
+# https://vanniktech.github.io/gradle-maven-publish-plugin/central/#in-memory-gpg-key
+
+# These are found from: https://central.sonatype.com/account
+export ORG_GRADLE_PROJECT_mavenCentralUsername=<username>
+export ORG_GRADLE_PROJECT_mavenCentralPassword=<password>
+
+# List keys to find keyId: gpg -k
+export ORG_GRADLE_PROJECT_signingInMemoryKey=<gpg --export-secret-keys --armor <key id> | grep -v '\-\-' | grep -v '^=.' | tr -d '\n'>
+export ORG_GRADLE_PROJECT_signingInMemoryKeyId=<key Id in short format>
+export ORG_GRADLE_PROJECT_signingInMemoryKeyPassword=<password used when generating key>
+
+
+# If modifying the key remember to publish it!
+# gpg --keyserver keyserver.ubuntu.com --send-keys <key Id>
+
+./gradlew publishAllPublicationsToMavenCentralRepository --stacktrace && \
+    echo "Now check out: https://central.sonatype.com/publishing/deployments"
+

@@ -1,9 +1,12 @@
-apply plugin: 'java-library'
+plugins {
+    id 'java-library'
+    id "com.vanniktech.maven.publish" version "0.29.0"
+}
 
 group = 'no.saua.remock'
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-version = '2.1.0-SNAPSHOT'
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+version = 'RC-2.1.0'
 
 repositories {
     mavenCentral()
@@ -72,4 +75,40 @@ tasks.withType(Test).configureEach {
 
 wrapper {
     gradleVersion = '8.10.2'
+}
+
+
+import com.vanniktech.maven.publish.SonatypeHost
+mavenPublishing {
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    signAllPublications()
+}
+
+mavenPublishing {
+    coordinates("no.saua.remock", "remock", project.version)
+
+    pom {
+        name = 'remock'
+        description = 'Remock is a library for mocking up Spring beans with Mockito'
+        url = 'https://github.com/ksaua/remock'
+        inceptionYear = '2015'
+        licenses {
+            license {
+                name = 'The MIT License'
+                url = 'http://opensource.org/licenses/MIT'
+                distribution = 'repo'
+            }
+        }
+        developers {
+            developer {
+                id = 'ksaua'
+                name = 'Knut Saua Mathiesen'
+            }
+        }
+        scm {
+            url = 'scm:git@github.com:ksaua/remock.git'
+            connection = 'scm:git@github.com:ksaua/remock.git'
+            developerConnection = 'scm:git@github.com:ksaua/remock.git'
+        }
+    }
 }
