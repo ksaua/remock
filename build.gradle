@@ -6,7 +6,7 @@ plugins {
 group = 'no.saua.remock'
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
-version = 'RC-2.1.0'
+version = 'RC2-2.1.0'
 
 repositories {
     mavenCentral()
@@ -26,6 +26,7 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'com.google.truth:truth:1.1.3'
+    testImplementation 'javax.annotation:javax.annotation-api:1.3.2'
 
     // Logging
     testImplementation 'org.apache.logging.log4j:log4j-api:2.1'
